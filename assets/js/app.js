@@ -35,6 +35,10 @@ function getData(position) {
 }
 
 function buildListView(res) {
+  if (res.length === 0) {
+    $('#listView').html(`<div class="error"><h2>Nothing found, squire…</h2>`);
+    return;
+  }
   res.forEach( function(item) {
     var html =
     `
