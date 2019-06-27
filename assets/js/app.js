@@ -52,5 +52,3 @@ function buildListView(res) {
 }
 
 $('button').on("click", getLocation);
-// $('button').trigger("click");
-// getData();
