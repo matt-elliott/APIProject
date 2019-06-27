@@ -17,14 +17,14 @@ function getData(position) {
   
   var map = new google.maps.Map(document.getElementById('map'), { center: loc, zoom: 12 });
   
-  var input = $('#food-prompt').val();
+  var input = $('#food-input').val();
   var request = {
     query: input,
     location: {
       lat: 34.0594726,
       lng: -118.4460542
     },
-    radius: '500',
+    radius: 5,
     type: ['restaurant', "food"]
   };
 
@@ -35,10 +35,14 @@ function getData(position) {
 }
 
 function buildListView(res) {
+  console.log(res);
   if (res.length === 0) {
     $('#listView').html(`<div class="error"><h2>Nothing found, squire…</h2>`);
     return;
   }
+  
+  $('#listView').empty();
+
   res.forEach( function(item) {
     var html =
     `
@@ -48,7 +52,8 @@ function buildListView(res) {
       </div>
     `;
     $('#listView').append(html);
+    // $('#listView').append(html);
   });
 }
 
-$('button').on("click", getLocation);
+$('#button-submit').on("click", getLocation);

@@ -1,26 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>API Proejct</title>
-  <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css' integrity='sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO' crossorigin='anonymous'>
+  <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css'
+    integrity='sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO' crossorigin='anonymous'>
   <link rel="stylesheet" href="assets/css/styles.css">
 </head>
+
 <body>
-  <button class="btn btn-primary text-center">Find Me!</button>
-  <div id="map"></div>
-  <div id="prompt">
-    <input type="text" name="food-prompt" id="food-prompt">
+  <div class=container>
+    <div class="jumbotron jumbotron-fluid">
+      <div class="container">
+        <h1 class="display-4">Hamburger Finder</h1>
+        <p class="lead text-center">This is a modified Hamburger that occupies the entire horizontal space of its parent.</p>
+      </div>
+    </div>
+    <nav class="navbar navbar-light bg-light">
+      <a class="navbar-brand" href="#">
+        <img src="assets/images/yuck.jpg" width="30" height="30" class="d-inline-block align-top" alt="">
+        Bootstrap
+      </a>
+    </nav>
+    <div class="input-group mb-3">
+      <input type="text" class="form-control" id="food-input" placeholder="what'd you want to eat?" aria-label="Recipient's username"
+        aria-describedby="button-addon2">
+    </div>
+    <div class="input-group mb-3">
+      <input type="text" class="form-control" id="allergy-input" placeholder="You's got any allergies" aria-label="Recipient's username"
+        aria-describedby="button-addon2">
+    </div>
+    <div class="input-group-append">
+      <button class="btn btn-outline-secondary" type="button" id="button-submit">Submit</button>
+    </div>
+
+    <div id="map">
+
+    </div>
+    
+    <div id="listView">
+
+    </div>
+
+
   </div>
-  <div id="listView"></div>
-  <script src='https://code.jquery.com/jquery-3.4.1.min.js' integrity='sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=' crossorigin='anonymous'></script>
 
-  <script src='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js' integrity='sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy' crossorigin='anonymous'></script>
-
+  <script src='https://code.jquery.com/jquery-3.4.1.min.js'
+    integrity='sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=' crossorigin='anonymous'></script>
+  <script src='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js'
+    integrity='sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy'
+    crossorigin='anonymous'></script>
   <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCrLNbCMxqut58h7AFwofVtZQP59iEbnwE&libraries=places"></script>
-
   <script src="assets/js/app.js"></script>
 </body>
+
 </html>
