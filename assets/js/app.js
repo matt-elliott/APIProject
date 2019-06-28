@@ -14,9 +14,9 @@ function showPosition(position) {
 
 function getData(position) {
   var loc = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-  
+
   var map = new google.maps.Map(document.getElementById('map'), { center: loc, zoom: 12 });
-  
+
   var input = $('#food-input').val();
   var request = {
     query: input,
@@ -40,12 +40,12 @@ function buildListView(res) {
     $('#listView').html(`<div class="error"><h2>Nothing found, squire…</h2>`);
     return;
   }
-  
+
   $('#listView').empty();
 
-  res.forEach( function(item) {
+  res.forEach(function (item) {
     var html =
-    `
+      `
       <div class="col">
         <img src="https://maps.gstatic.com/mapfiles/place_api/icons/geocode-71.png">
         <h1>${item.name}</h1>
@@ -57,3 +57,27 @@ function buildListView(res) {
 }
 
 $('#button-submit').on("click", getLocation);
+
+
+// present map on page //
+
+function presentMap(map) {
+  var loc = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+
+  var map = new google.maps.Map(document.getElementById('map'), { center: loc, zoom: 12 });
+
+  $("map").append(map);
+  console.log(map);
+}
+
+presentMap();
+
+// create a function to show the drop pins on the map //
+
+function dropPins(map, loc) {
+  var pins = new google.maps.Marker({
+    position: location,
+    map: map
+  });
+
+}
