@@ -10,6 +10,7 @@ function getLocation() {
 
 function showPosition(position) {
   getData(position);
+  presentMap(position);
 }
 
 function getData(position) {
@@ -62,16 +63,17 @@ function buildListView(res) {
 
 // present map on page //
 
-function presentMap(map) {
+function presentMap(position) {
   var loc = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 
   var map = new google.maps.Map(document.getElementById('map'), { center: loc, zoom: 12 });
 
-  $("map").append(map);
+  $("#map").append(map);
+  $("#map").css({
+    "min-height": "550px"
+  });
   console.log(map);
 }
-
-presentMap();
 
 // create a function to show the drop pins on the map //
 

@@ -13,3 +13,6 @@
 .price-level-5:after {
   content: "$$$$$";
 }
+#map {
+  min-height: 550px !important;
+}
