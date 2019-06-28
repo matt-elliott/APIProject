@@ -13,17 +13,18 @@ function showPosition(position) {
 }
 
 function getData(position) {
-  var loc = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-  
-  var map = new google.maps.Map(document.getElementById('map'), { center: loc, zoom: 12 });
+  // var loc = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+  var loc = "Westwood";
+  var map = new google.maps.Map(document.getElementById('map'), { center: {lat: 34.0594726, lng: -118.4460542}, zoom: 12 });
   
   var input = $('#food-input').val();
   var request = {
     query: input,
-    location: {
-      lat: 34.0594726,
-      lng: -118.4460542
-    },
+    location: {lat: 34.0594726, lng: -118.4460542},
+    // location: {
+    //   lat: 34.0594726,
+    //   lng: -118.4460542
+    // },
     radius: 5,
     type: ['restaurant', "food"]
   };
@@ -59,4 +60,6 @@ function buildListView(res) {
   });
 }
 
-$('#button-submit').on("click", getLocation);
+// $('#button-submit').on("click", getLocation);
+$('#button-submit').on("click", getData);
+$('#button-submit').trigger("click");
