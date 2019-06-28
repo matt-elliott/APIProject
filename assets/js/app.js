@@ -13,17 +13,18 @@ function showPosition(position) {
 }
 
 function getData(position) {
-  var loc = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-
-  var map = new google.maps.Map(document.getElementById('map'), { center: loc, zoom: 12 });
+  // var loc = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+  var loc = "Westwood";
+  var map = new google.maps.Map(document.getElementById('map'), { center: { lat: 34.0594726, lng: -118.4460542 }, zoom: 12 });
 
   var input = $('#food-input').val();
   var request = {
     query: input,
-    location: {
-      lat: 34.0594726,
-      lng: -118.4460542
-    },
+    location: { lat: 34.0594726, lng: -118.4460542 },
+    // location: {
+    //   lat: 34.0594726,
+    //   lng: -118.4460542
+    // },
     radius: 5,
     type: ['restaurant', "food"]
   };
@@ -46,18 +47,18 @@ function buildListView(res) {
   res.forEach(function (item) {
     var html =
       `
-      <div class="col">
+      <div class="col-xs-12 col-md-6">
         <img src="https://maps.gstatic.com/mapfiles/place_api/icons/geocode-71.png">
-        <h1>${item.name}</h1>
+        <h4>${item.name}</h4>
+        <span class="price-level-${item.price_level}"></span>
+        <span class="${item.opening_hours.open_now}"></span>
+        <span class="${item.rating}"></span>
       </div>
     `;
     $('#listView').append(html);
     // $('#listView').append(html);
   });
 }
-
-$('#button-submit').on("click", getLocation);
-
 
 // present map on page //
 
@@ -81,3 +82,6 @@ function dropPins(map, loc) {
   });
 
 }
+// $('#button-submit').on("click", getLocation);
+$('#button-submit').on("click", getData);
+$('#button-submit').trigger("click");
