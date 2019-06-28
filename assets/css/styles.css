@@ -1,0 +1,15 @@
+.price-level-1:after {
+  content: "$";
+}
+.price-level-2:after {
+  content: "$$";
+}
+.price-level-3:after {
+  content: "$$$$";
+}
+.price-level-4:after {
+  content: "$$$$";
+}
+.price-level-5:after {
+  content: "$$$$$";
+}

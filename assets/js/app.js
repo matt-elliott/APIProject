@@ -40,15 +40,18 @@ function buildListView(res) {
     $('#listView').html(`<div class="error"><h2>Nothing found, squire…</h2>`);
     return;
   }
-  
+
   $('#listView').empty();
 
   res.forEach( function(item) {
     var html =
     `
-      <div class="col">
+      <div class="col-xs-12 col-md-6">
         <img src="https://maps.gstatic.com/mapfiles/place_api/icons/geocode-71.png">
-        <h1>${item.name}</h1>
+        <h4>${item.name}</h4>
+        <span class="price-level-${item.price_level}"></span>
+        <span class="${item.opening_hours.open_now}"></span>
+        <span class="${item.rating}"></span>
       </div>
     `;
     $('#listView').append(html);
