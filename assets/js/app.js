@@ -9,13 +9,14 @@ function getLocation() {
 }
 
 function showPosition(position) {
-  getData(position);
+  // getData(position);
   presentMap(position);
+  console.log(position);
 }
 
-function getData(position) {
+function getData() {
   // var loc = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-  var loc = "Westwood";
+  // var loc = "Westwood";
   var map = new google.maps.Map(document.getElementById('map'), { center: { lat: 34.0594726, lng: -118.4460542 }, zoom: 12 });
 
   var input = $('#food-input').val();
@@ -33,7 +34,9 @@ function getData(position) {
   var service = new google.maps.places.PlacesService(map);
   service.textSearch(request, function (response) {
     buildListView(response);
-  })
+  });
+
+  presentMap({ lat: 34.0594726, lng: -118.4460542 });
 }
 
 function buildListView(res) {
@@ -64,26 +67,38 @@ function buildListView(res) {
 // present map on page //
 
 function presentMap(position) {
-  var loc = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+  console.log('p', position);
+  // var loc = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 
-  var map = new google.maps.Map(document.getElementById('map'), { center: loc, zoom: 12 });
+  var map = new google.maps.Map(document.getElementById('map'), { center: position, zoom: 12 });
 
   $("#map").append(map);
-  $("#map").css({
-    "min-height": "550px"
-  });
-  console.log(map);
+
+  dropPins(position);
+
 }
 
 // create a function to show the drop pins on the map //
+// retrieve the results from 
+function dropPins(position) {
 
-function dropPins(map, loc) {
+  var map = new google.maps.Map(document.getElementById('map'), { center: position, zoom: 12 });
+
+  // var loc = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+  console.log('p', position);
   var pins = new google.maps.Marker({
-    position: location,
-    map: map
+    position: position,
+    map: map,
+    animation: google.maps.Animation.DROP
   });
 
+
+  //$("#map").append(pins);
+
+  // animate the pins in map //
+
 }
+
 // $('#button-submit').on("click", getLocation);
 $('#button-submit').on("click", getData);
 $('#button-submit').trigger("click");
