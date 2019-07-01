@@ -1,6 +1,10 @@
 (function () {
   var restaurants = [];
 
+  function noResults() {
+    $('#listView').html(`<div class="error"><h2>Nothing found, please try again</h2>`);
+  }
+
   function getLocation() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(showPosition);
@@ -25,36 +29,39 @@
       query: input,
       location: { lat: 34.0594726, lng: -118.4460542 },
       radius: 15,
-      type: ['restaurant', "food"]
+      type: 'restaurant'
     };
 
     var service = new google.maps.places.PlacesService(map);
-    service.textSearch(request, function (response) {
-      
-      restaurants = response;
-      
-      buildListView();
+    
+    service.textSearch(request, function (response, status) {
+      if( status === google.maps.places.PlacesServiceStatus.OK ) {
+        restaurants = response;
+        buildListView();
+      } else {
+        console.error(status);
+        noResults();
+      }
     });
   }
 
   function buildListView() {
-    if (restaurants.length === 0) {
-      $('#listView').html(`<div class="error"><h2>Nothing found, squire…</h2>`);
-      return;
-    }
-
     $('#listView').empty();
 
     restaurants.forEach(function (item) {
       var itemID = restaurants.indexOf(item);
+      var name = item.name === undefined ? '' : item.name;
+      var priceLevel = item.price_level === undefined ? '' : item.price_level;
+      var openNow = item.opening_hours === undefined ? '' : item.opening_hours.open_now;
+      var rating = item.rating === undefined ? '' : item.rating;
 
       var html =`
         <div class="col-xs-12 col-md-6">
-          <h4><button class="btn btn-link restaurant-btn"  data-restaurant-id="${itemID}">${item.name}</button></h4>
+          <h4><button class="btn btn-link restaurant-btn"  data-restaurant-id="${itemID}">${name}</button></h4>
           <img src="https://maps.gstatic.com/mapfiles/place_api/icons/geocode-71.png">
-          <span class="price-level-${item.price_level}"></span>
-          <span class="${item.opening_hours.open_now}"></span>
-          <span class="${item.rating}"></span>
+          <span class="price-level-${priceLevel}"></span>
+          <span class="${openNow}"></span>
+          <span class="${rating}"></span>
         </div>`;
 
       $('#listView').append(html);
@@ -70,7 +77,7 @@
         <h3 class="restaurant-name">${restaurant.name}</h3>
         <div class="row">
           <figure class="col">
-            <img src="${restaurant.photos[0].getUrl()}" class="img-thumbnail">
+            <img src="${restaurant.photos === undefined? '' :  restaurant.photos[0].getUrl()}" class="img-thumbnail">
           </figure>
           <div class="col" id="restaurant-info">
             <address>${restaurant.formatted_address}</address>
@@ -78,7 +85,7 @@
             <p class="rating-level">Rating: ${restaurant.rating}</p>
           </div>
         </div>
-        <span class="btn close-btn"></span>
+        <span class="btn close-btn">X</span>
       </aside>
     `;
     $('body').append(restaurantView);
