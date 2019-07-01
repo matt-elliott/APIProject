@@ -79,7 +79,9 @@ function presentMap(position) {
 }
 
 // create a function to show the drop pins on the map //
-// retrieve the results from 
+// retrieve the results from user input //
+// drop pins with given restaurant results //
+
 function dropPins(position) {
 
   var map = new google.maps.Map(document.getElementById('map'), { center: position, zoom: 12 });
