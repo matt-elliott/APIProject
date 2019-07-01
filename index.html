@@ -59,6 +59,8 @@
           aria-describedby="button-addon2"
         />
       </div>
+      <input type="checkbox" id="checkbox" v-model="checked" />
+      <label for="checkbox">Are you vegetarian or vegan?</label>
       <div class="input-group-append">
         <button
           class="btn btn-outline-secondary"
@@ -70,8 +72,11 @@
       </div>
 
       <div id="map"></div>
-
-      <div id="listView" class="row"></div>
+      <ul id="listView">
+        <li v-repeat="col">
+          {{ $value }}
+        </li>
+      </ul>
     </div>
 
     <script
