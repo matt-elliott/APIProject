@@ -13,3 +13,49 @@
 .price-level-5:after {
   content: "$$$$$";
 }
+.rating-1:after {
+  content: "*";
+}
+.rating-2:after {
+  content: "**";
+}
+.rating-3:after {
+  content: "***";
+}
+.rating-4:after {
+  content: "****";
+}
+.rating-5:after {
+  content: "*****";
+}
+#map {
+  min-height: 250px;
+}
+/** SINGLE RESTAURANT VIEW [START] **/
+.restaurant-view {
+  background-color: #fff;
+  position: fixed;
+  top: 5%;
+  right: 0;
+  bottom: 5%;
+  left: 0;
+  /* max-width: 65%; */
+  height: 90%;
+  padding: 15px;
+  border: 1px solid #a3a3a3;
+  box-shadow: 0 0 5px #444;
+  z-index: 5;
+  overflow: scroll;
+}
+/* .restaurant-view #restaurant-reviews {
+  max-height: 200px;
+  overflow: scroll;
+} */
+.restaurant-view #reviews .review {
+  margin: 60px 0;
+  border-bottom: 2px dashed #efefef;
+}
+.restaurant-view #reviews .review .review-header {
+  margin-bottom: 30px;
+}
+/** SINGLE RESTAURANT VIEW [END] **/
