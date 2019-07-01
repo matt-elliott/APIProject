@@ -24,7 +24,12 @@
 
   function getData(position) {
     //  loc = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-    map = new google.maps.Map(document.getElementById('map'), { center: { lat: 34.0594726, lng: -118.4460542 }, zoom: 12 });
+    loc = new google.maps.LatLng(34.0594726, -118.4460542);
+
+    map = new google.maps.Map(document.getElementById('map'), {
+      center: loc,
+      zoom: 12
+    });
     
     var input = $('#food-input').val();
     var request = {
@@ -33,43 +38,14 @@
       radius: 15,
       type: 'restaurant'
     };
-function showPosition(position) {
-  // getData(position);
-  presentMap(position);
-  console.log(position);
-}
-
-function getData() {
-  // var loc = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-  // var loc = "Westwood";
-  var map = new google.maps.Map(document.getElementById('map'), { center: { lat: 34.0594726, lng: -118.4460542 }, zoom: 12 });
-
-  var input = $('#food-input').val();
-  var request = {
-    query: input,
-    location: { lat: 34.0594726, lng: -118.4460542 },
-    // location: {
-    //   lat: 34.0594726,
-    //   lng: -118.4460542
-    // },
-    radius: 5,
-    type: ['restaurant', "food"]
-  };
-
-  var service = new google.maps.places.PlacesService(map);
-  service.textSearch(request, function (response) {
-    buildListView(response);
-  });
-
-  presentMap({ lat: 34.0594726, lng: -118.4460542 });
-}
 
     service = new google.maps.places.PlacesService(map);
-    
+  
     service.textSearch(request, function (response, status) {
       if( status === google.maps.places.PlacesServiceStatus.OK ) {
         restaurants = response;
         buildListView();
+        dropPins(loc);
       } else {
         console.error(status);
         noResults();
@@ -148,7 +124,7 @@ function getData() {
         <h3 class="restaurant-name">${place.name}</h3>
         <div class="row">
           <figure class="col">
-            <img src="${place.photos === undefined ? '' :  place.photos[0].getUrl()}" class="img-thumbnail">
+            <img src="${place.photos === undefined ? '' : place.photos[0].getUrl()}" class="img-thumbnail">
           </figure>
           <div class="col" id="restaurant-info">
             <address>${place.formatted_address}</address>
@@ -161,19 +137,33 @@ function getData() {
         ${reviews[0].outerHTML}
         <span class="btn close-btn">X</span>
       </aside>
-  res.forEach(function (item) {
-    var html =
-      `
-      <div class="col-xs-12 col-md-6">
-        <img src="https://maps.gstatic.com/mapfiles/place_api/icons/geocode-71.png">
-        <h4>${item.name}</h4>
-        <span class="price-level-${item.price_level}"></span>
-        <span class="${item.opening_hours.open_now}"></span>
-        <span class="${item.rating}"></span>
-      </div>
     `;
+
     $('body').append(restaurantView);
   }  
+
+  // create a function to show the drop pins on the map //
+  // retrieve the results from user input //
+  // drop pins with given restaurant results //
+
+  function dropPins(position) {
+
+    var map = new google.maps.Map(document.getElementById('map'), { center: position, zoom: 12 });
+
+    // var loc = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+    console.log('p', position);
+    var pins = new google.maps.Marker({
+      position: position,
+      map: map,
+      animation: google.maps.Animation.DROP
+    });
+
+
+    //$("#map").append(pins);
+
+    // animate the pins in map //
+
+  }
 
   // $('#button-submit').on("click", getLocation);
   $('#button-submit').on("click", getData);
@@ -189,43 +179,3 @@ function getData() {
     }, 500);
   });
 })();
-// present map on page //
-
-function presentMap(position) {
-  console.log('p', position);
-  // var loc = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-
-  var map = new google.maps.Map(document.getElementById('map'), { center: position, zoom: 12 });
-
-  $("#map").append(map);
-
-  dropPins(position);
-
-}
-
-// create a function to show the drop pins on the map //
-// retrieve the results from user input //
-// drop pins with given restaurant results //
-
-function dropPins(position) {
-
-  var map = new google.maps.Map(document.getElementById('map'), { center: position, zoom: 12 });
-
-  // var loc = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-  console.log('p', position);
-  var pins = new google.maps.Marker({
-    position: position,
-    map: map,
-    animation: google.maps.Animation.DROP
-  });
-
-
-  //$("#map").append(pins);
-
-  // animate the pins in map //
-
-}
-
-// $('#button-submit').on("click", getLocation);
-$('#button-submit').on("click", getData);
-$('#button-submit').trigger("click");
