@@ -138,31 +138,8 @@
     `;
 
     $('body').append(restaurantView);
+    presentMap();
   }
-
-  // create a function to show the drop pins on the map //
-  // retrieve the results from user input //
-  // drop pins with given restaurant results //
-
-  function dropPins(position) {
-
-    var map = new google.maps.Map(document.getElementById('map'), { center: position, zoom: 12 });
-
-    // var loc = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-    console.log('p', position);
-    var pins = new google.maps.Marker({
-      position: position,
-      map: map,
-      animation: google.maps.Animation.DROP
-    });
-
-
-    //$("#map").append(pins);
-
-    // animate the pins in map //
-
-  }
-
 
   // present map on page //
 
@@ -170,53 +147,58 @@
     console.log('p', position);
     // var loc = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 
-    var map = new google.maps.Map(document.getElementById('map'), { center: position, zoom: 12 });
+    var map = new google.maps.Map(document.getElementById('map'), { center: loc, zoom: 12 });
 
-    $("#map").append(map);
+    // $("#map").append(map);
 
-    dropPins(position);
-
+    dropPins();
   }
 
   // create a function to show the drop pins on the map //
   // retrieve the results from user input //
   // drop pins with given restaurant results //
 
-  function dropPins(position) {
+  function dropPins() {
 
-    var map = new google.maps.Map(document.getElementById('map'), { center: position, zoom: 12 });
+    var map = new google.maps.Map(document.getElementById('map'), { center: loc, zoom: 12 });
 
-    // var loc = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-    console.log('p', position);
-    var pins = new google.maps.Marker({
-      position: position,
-      map: map,
-      animation: google.maps.Animation.DROP
-    });
-    clearPins();
-    for (var i = 0; i < restaurants.length; i++); {
-      addPinWithTimeout(map[i]);
+    for (var i = 0; i < restaurants.length; i++) {
+      console.log(restaurants[i].geometry.location.lat());
+
+      marker = new google.maps.Marker({
+        map: map,
+        draggable: true,
+        animation: google.maps.Animation.DROP,
+        position: {
+          lat: restaurants[i].geometry.location.lat(),
+          lng: restaurants[i].geometry.location.lng()
+        }
+      });
+      clearMarkers();
     }
-    function addPinWithTimeout(position, timeout) {
-      window.setTimeout(function () {
-        pins.push(new google.maps.Marker({
-          position: position,
-          map: map,
-          animation: google.maps.Animation.DROP
-        }));
-      }, timeout);
-    }
-    function clearPins() {
-      for (var i = 0; i < pins.length; i++) {
-        pins[i].setMap(null);
+
+    function clearMarkers() {
+      markers = [];
+
+      for (var i = 0; i < markers.length; i++) {
+        markers[i].setMap(null);
       }
-      marker = [];
     }
-    //$("#map").append(pins);
 
-    // animate the pins in map //
+    marker.addListener('click', toggleBounce);
 
+    function toggleBounce() {
+      if (marker.getAnimation() !== null) {
+        marker.setAnimation(null);
+      } else {
+        marker.setAnimation(google.maps.Animation.BOUNCE);
+      }
+    }
   }
+
+  //$("#map").append(pins);
+
+  // animate the pins in map //
 
   // $('#button-submit').on("click", getLocation);
   $('#button-submit').on("click", getData);
