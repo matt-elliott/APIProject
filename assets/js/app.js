@@ -30,7 +30,7 @@
       center: loc,
       zoom: 12
     });
-    
+
     var input = $('#food-input').val();
     var request = {
       query: input,
@@ -40,7 +40,7 @@
     };
 
     service = new google.maps.places.PlacesService(map);
-  
+
     service.textSearch(request, function (response, status) {
       if (status === google.maps.places.PlacesServiceStatus.OK) {
         restaurants = response;
@@ -120,7 +120,7 @@
     });
     console.log(reviews[0]);
     var restaurantView = `<aside id = "${place.name}" class="restaurant-view">
-      < h3 class="restaurant-name" > ${ place.name }</h3 >
+      < h3 class="restaurant-name" > ${ place.name}</h3 >
         <div class="row">
           <figure class="col">
             <img src="${place.photos === undefined ? '' : place.photos[0].getUrl()}" class="img-thumbnail">
@@ -138,7 +138,7 @@
     `;
 
     $('body').append(restaurantView);
-  }  
+  }
 
   // create a function to show the drop pins on the map //
   // retrieve the results from user input //
@@ -178,7 +178,7 @@
 
   }
 
-  //create a function to show the drop pins on the map //
+  // create a function to show the drop pins on the map //
   // retrieve the results from user input //
   // drop pins with given restaurant results //
 
@@ -193,8 +193,24 @@
       map: map,
       animation: google.maps.Animation.DROP
     });
+    clearPins();
     for (var i = 0; i < restaurants.length; i++); {
       addPinWithTimeout(map[i]);
+    }
+    function addPinWithTimeout(position, timeout) {
+      window.setTimeout(function () {
+        pins.push(new google.maps.Marker({
+          position: position,
+          map: map,
+          animation: google.maps.Animation.DROP
+        }));
+      }, timeout);
+    }
+    function clearPins() {
+      for (var i = 0; i < pins.length; i++) {
+        pins[i].setMap(null);
+      }
+      marker = [];
     }
     //$("#map").append(pins);
 
