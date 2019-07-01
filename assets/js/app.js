@@ -2,7 +2,7 @@
   var restaurants = [];
   var loc;
   var map;
-  var service; 
+  var service;
 
   function noResults() {
     $('#listView').html(`<div class="error"><h2>Nothing found, please try again</h2>`);
@@ -42,7 +42,7 @@
     service = new google.maps.places.PlacesService(map);
   
     service.textSearch(request, function (response, status) {
-      if( status === google.maps.places.PlacesServiceStatus.OK ) {
+      if (status === google.maps.places.PlacesServiceStatus.OK) {
         restaurants = response;
         buildListView();
         dropPins(loc);
@@ -63,7 +63,7 @@
       var openNow = item.opening_hours === undefined ? '' : item.opening_hours.open_now;
       var rating = item.rating === undefined ? '' : item.rating;
 
-      var html =`
+      var html = `
         <div class="col-xs-12 col-md-6">
           <h4><button class="btn btn-link restaurant-btn"
             data-restaurant-id="${itemID}">${name}</button></h4>
@@ -83,21 +83,21 @@
       placeId: restaurantID
     }
 
-    service.getDetails(request, function(place, status) {
-      if( status === google.maps.places.PlacesServiceStatus.OK ) {
+    service.getDetails(request, function (place, status) {
+      if (status === google.maps.places.PlacesServiceStatus.OK) {
         buildRestaurantView(place);
       } else {
         console.error(status);
       }
     });
   }
-  
+
   function buildRestaurantView(place) {
     console.log(place);
     var reviews = $('<div>');
-    reviews.attr('id','reviews');
-    
-    place.reviews.forEach(function(review) {
+    reviews.attr('id', 'reviews');
+
+    place.reviews.forEach(function (review) {
       var html = `
         <div class="review">
           <header class="review-header row">
@@ -119,20 +119,18 @@
       reviews.append(html);
     });
     console.log(reviews[0]);
-    var restaurantView = `
-      <aside id="${place.name}" class="restaurant-view">
-        <h3 class="restaurant-name">${place.name}</h3>
+    var restaurantView = `<aside id = "${place.name}" class="restaurant-view">
+      < h3 class="restaurant-name" > ${ place.name }</h3 >
         <div class="row">
           <figure class="col">
             <img src="${place.photos === undefined ? '' : place.photos[0].getUrl()}" class="img-thumbnail">
           </figure>
-          <div class="col" id="restaurant-info">
-            <address>${place.formatted_address}</address>
-            <span class="phone-number"><a href=tel:${place.formatted_phone_number}">${place.formatted_phone_number}</a></span>
+            <div class="col" id="restaurant-info">
+              <address>${place.formatted_address}</address>
+              <span class="phone-number"><a href=tel: ${place.formatted_phone_number}">${place.formatted_phone_number}</a></span>
             <p class="price-level price-level-${place.price_level}">Price level:</p>
             <p class="rating-level rating-${place.rating}">Rating: ${place.rating}</p>
             <p class="webiste">Website: <a href="${place.website}" target="_blank">${place.website}</a></p>
-          </div>
         </div>
         ${reviews[0].outerHTML}
         <span class="btn close-btn">X</span>
@@ -165,16 +163,55 @@
 
   }
 
+
+  // present map on page //
+
+  function presentMap(position) {
+    console.log('p', position);
+    // var loc = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+
+    var map = new google.maps.Map(document.getElementById('map'), { center: position, zoom: 12 });
+
+    $("#map").append(map);
+
+    dropPins(position);
+
+  }
+
+  //create a function to show the drop pins on the map //
+  // retrieve the results from user input //
+  // drop pins with given restaurant results //
+
+  function dropPins(position) {
+
+    var map = new google.maps.Map(document.getElementById('map'), { center: position, zoom: 12 });
+
+    // var loc = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+    console.log('p', position);
+    var pins = new google.maps.Marker({
+      position: position,
+      map: map,
+      animation: google.maps.Animation.DROP
+    });
+    for (var i = 0; i < restaurants.length; i++); {
+      addPinWithTimeout(map[i]);
+    }
+    //$("#map").append(pins);
+
+    // animate the pins in map //
+
+  }
+
   // $('#button-submit').on("click", getLocation);
   $('#button-submit').on("click", getData);
   $('#button-submit').trigger("click");
 
   //listeners
   $(document).on("click", '.restaurant-btn', loadSingleRestaurantView);
-  $(document).on("click", '.close-btn', function() {
+  $(document).on("click", '.close-btn', function () {
     var parent = $(this).parent();
     parent.fadeOut('slow');
-    setTimeout(function() {
+    setTimeout(function () {
       parent.remove();
     }, 500);
   });
