@@ -34,7 +34,7 @@
       restaurants = response;
       
       buildListView();
-    })
+    });
   }
 
   function buildListView() {
@@ -63,8 +63,25 @@
 
   function loadSingleRestaurantView() {
     var selectedRestaurantID = $(this).attr('data-restaurant-id');
-    var selectedRestaurant = restaurants[selectedRestaurantID];
-    console.log(selectedRestaurant);
+    var restaurant = restaurants[selectedRestaurantID];
+    console.log(restaurant);
+    var restaurantView = `
+      <aside id="${restaurant.name}" class="restaurant-view">
+        <h3 class="restaurant-name">${restaurant.name}</h3>
+        <div class="row">
+          <figure class="col">
+            <img src="${restaurant.photos[0].getUrl()}" class="img-thumbnail">
+          </figure>
+          <div class="col" id="restaurant-info">
+            <address>${restaurant.formatted_address}</address>
+            <p class="price-level">Price level: ${restaurant.price_level}</p>
+            <p class="rating-level">Rating: ${restaurant.rating}</p>
+          </div>
+        </div>
+        <span class="btn close-btn"></span>
+      </aside>
+    `;
+    $('body').append(restaurantView);
   }
 
   // $('#button-submit').on("click", getLocation);
@@ -73,4 +90,11 @@
 
   //listeners
   $(document).on("click", '.restaurant-btn', loadSingleRestaurantView);
+  $(document).on("click", '.close-btn', function() {
+    var parent = $(this).parent();
+    parent.fadeOut('slow');
+    setTimeout(function() {
+      parent.remove();
+    }, 500);
+  });
 })();
