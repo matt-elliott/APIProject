@@ -1,5 +1,8 @@
 (function () {
   var restaurants = [];
+  var loc;
+  var map;
+  var service; 
 
   function noResults() {
     $('#listView').html(`<div class="error"><h2>Nothing found, please try again</h2>`);
@@ -20,9 +23,8 @@
   }
 
   function getData(position) {
-    // var loc = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-    var loc = "Westwood";
-    var map = new google.maps.Map(document.getElementById('map'), { center: { lat: 34.0594726, lng: -118.4460542 }, zoom: 12 });
+    //  loc = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+    map = new google.maps.Map(document.getElementById('map'), { center: { lat: 34.0594726, lng: -118.4460542 }, zoom: 12 });
     
     var input = $('#food-input').val();
     var request = {
@@ -32,7 +34,7 @@
       type: 'restaurant'
     };
 
-    var service = new google.maps.places.PlacesService(map);
+    service = new google.maps.places.PlacesService(map);
     
     service.textSearch(request, function (response, status) {
       if( status === google.maps.places.PlacesServiceStatus.OK ) {
@@ -49,7 +51,7 @@
     $('#listView').empty();
 
     restaurants.forEach(function (item) {
-      var itemID = restaurants.indexOf(item);
+      var itemID = item.place_id;
       var name = item.name === undefined ? '' : item.name;
       var priceLevel = item.price_level === undefined ? '' : item.price_level;
       var openNow = item.opening_hours === undefined ? '' : item.opening_hours.open_now;
@@ -57,7 +59,8 @@
 
       var html =`
         <div class="col-xs-12 col-md-6">
-          <h4><button class="btn btn-link restaurant-btn"  data-restaurant-id="${itemID}">${name}</button></h4>
+          <h4><button class="btn btn-link restaurant-btn"
+            data-restaurant-id="${itemID}">${name}</button></h4>
           <img src="https://maps.gstatic.com/mapfiles/place_api/icons/geocode-71.png">
           <span class="price-level-${priceLevel}"></span>
           <span class="${openNow}"></span>
@@ -69,27 +72,68 @@
   }
 
   function loadSingleRestaurantView() {
-    var selectedRestaurantID = $(this).attr('data-restaurant-id');
-    var restaurant = restaurants[selectedRestaurantID];
-    console.log(restaurant);
+    var restaurantID = $(this).attr('data-restaurant-id');
+    var request = {
+      placeId: restaurantID
+    }
+
+    service.getDetails(request, function(place, status) {
+      if( status === google.maps.places.PlacesServiceStatus.OK ) {
+        buildRestaurantView(place);
+      } else {
+        console.error(status);
+      }
+    });
+  }
+  
+  function buildRestaurantView(place) {
+    console.log(place);
+    var reviews = $('<div>');
+    reviews.attr('id','reviews');
+    
+    place.reviews.forEach(function(review) {
+      var html = `
+        <div class="review">
+          <header class="review-header row">
+          <div class="col-3 profile-photo">
+              <img src="${review.profile_photo_url}" class="img-fluid">
+            </div>
+            <div class="col-6 name">
+              <span class="rating rating-${review.rating}"></span>
+              <h3>${review.author_name}</h3>
+              <span class="small">${review.relative_time_description}</span>
+            </div>
+          </header>
+          <article class="review-body row">
+            <p class="reivew-text col">${review.text}</p>
+          </article>
+        </div>
+      `;
+
+      reviews.append(html);
+    });
+    console.log(reviews[0]);
     var restaurantView = `
-      <aside id="${restaurant.name}" class="restaurant-view">
-        <h3 class="restaurant-name">${restaurant.name}</h3>
+      <aside id="${place.name}" class="restaurant-view">
+        <h3 class="restaurant-name">${place.name}</h3>
         <div class="row">
           <figure class="col">
-            <img src="${restaurant.photos === undefined? '' :  restaurant.photos[0].getUrl()}" class="img-thumbnail">
+            <img src="${place.photos === undefined ? '' :  place.photos[0].getUrl()}" class="img-thumbnail">
           </figure>
           <div class="col" id="restaurant-info">
-            <address>${restaurant.formatted_address}</address>
-            <p class="price-level">Price level: ${restaurant.price_level}</p>
-            <p class="rating-level">Rating: ${restaurant.rating}</p>
+            <address>${place.formatted_address}</address>
+            <span class="phone-number"><a href=tel:${place.formatted_phone_number}">${place.formatted_phone_number}</a></span>
+            <p class="price-level price-level-${place.price_level}">Price level:</p>
+            <p class="rating-level rating-${place.rating}">Rating: ${place.rating}</p>
+            <p class="webiste">Website: <a href="${place.website}" target="_blank">${place.website}</a></p>
           </div>
         </div>
+        ${reviews[0].outerHTML}
         <span class="btn close-btn">X</span>
       </aside>
     `;
     $('body').append(restaurantView);
-  }
+  }  
 
   // $('#button-submit').on("click", getLocation);
   $('#button-submit').on("click", getData);
