@@ -5,7 +5,8 @@
   var service;
 
   function noResults() {
-    $('#listView').html(`<div class="error"><h2>Nothing found, please try again</h2>`);
+    $('#listView').html(`<div class="error col-12"><h2>Nothing found, please try again</h2>`);
+    $('#map').hide();
   }
 
   function getLocation() {
@@ -45,6 +46,12 @@
       console.log('got response!')
 
       restaurants = response.businesses;
+
+      if (restaurants.length === 0) {
+        noResults();
+        return;
+      }
+
       loc = new google.maps.LatLng(lat, lng);
       map = new google.maps.Map(document.getElementById('map'), {
         center: loc, zoom: 15
@@ -56,6 +63,7 @@
   }
 
   function buildListView() {
+    $('#map').hide();
     $('#listView').empty();
     console.log(restaurants);
     restaurants.forEach(function (item) {
