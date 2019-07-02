@@ -63,7 +63,7 @@
   }
 
   function buildListView() {
-    $('#map').hide();
+    $('#map').show();
     $('#listView').empty();
     console.log(restaurants);
     restaurants.forEach(function (item) {
