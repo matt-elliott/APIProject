@@ -983,18 +983,18 @@
     restaurants = response.businesses;
     loc = new google.maps.LatLng(lat, lng);
     map = new google.maps.Map(document.getElementById('map'), {
-      center: loc, zoom: 12
+      center: loc, zoom: 15
     });
 
     buildListView();
-    dropPins(loc);
+    dropPins(map, restaurants);
   }
 
   function buildListView() {
     $('#listView').empty();
     console.log(restaurants);
     restaurants.forEach(function (item) {
-      var itemID = item.place_id;
+      var itemID = item.id;
       var name = item.name === undefined ? '' : item.name;
       var priceLevel = item.price_level === undefined ? '' : item.price_level;
       var openNow = item.opening_hours === undefined ? '' : item.opening_hours.open_now;
@@ -1016,90 +1016,172 @@
 
   function loadSingleRestaurantView() {
     var restaurantID = $(this).attr('data-restaurant-id');
-    var request = {
-      placeId: restaurantID
-    }
+    console.log(restaurantID);
+    // $.ajax({
+    //   url: `https://api.yelp.com/v3/businesses/${restaurantID}`,
+    //   method: 'GET',
+    //   headers: {
+    //     Authorization: `Bearer ktigyrLk8IGtOoqqF4SB07jfVpMdNXYUuxDVfAKW_O5dAb4fa7megmQRsMeggxdnbc7Vma5Cx8qGcBLlZ0PFKLDKKz6xZX3GyZAijIWhmAn9tNeeHh3XAUYDQ_03WnYx`
+    //   },
+    // }).then(function(response) {
+    //   console.log(response);
+    // });
 
-    service.getDetails(request, function (place, status) {
-      if (status === google.maps.places.PlacesServiceStatus.OK) {
-        buildRestaurantView(place);
-      } else {
-        console.error(status);
-      }
-    });
+    var restaurant = {
+      id: "zcZWzI0sE51fOV6Ao-c_TA",
+      alias: "lamonicas-new-york-pizza-los-angeles",
+      name: "Lamonica's New York Pizza",
+      image_url:
+        "https://s3-media1.fl.yelpcdn.com/bphoto/cdSN8XSnr_kanhy-UUSpzA/o.jpg",
+      is_claimed: true,
+      is_closed: false,
+      url:
+        "https://www.yelp.com/biz/lamonicas-new-york-pizza-los-angeles?adjust_creative=5iCsI2DOwhKNzlcx8lc0Fg&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_lookup&utm_source=5iCsI2DOwhKNzlcx8lc0Fg",
+      phone: "+13102088671",
+      display_phone: "(310) 208-8671",
+      review_count: 959,
+      categories: [
+        {
+          alias: "pizza",
+          title: "Pizza"
+        },
+        {
+          alias: "chicken_wings",
+          title: "Chicken Wings"
+        }
+      ],
+      rating: 4,
+      location: {
+        address1: "1066 Gayley Ave",
+        address2: "",
+        address3: "",
+        city: "Los Angeles",
+        zip_code: "90024",
+        country: "US",
+        state: "CA",
+        display_address: ["1066 Gayley Ave", "Los Angeles, CA 90024"],
+        cross_streets: ""
+      },
+      coordinates: {
+        latitude: 34.0609817504883,
+        longitude: -118.446723937988
+      },
+      photos: [
+        "https://s3-media1.fl.yelpcdn.com/bphoto/cdSN8XSnr_kanhy-UUSpzA/o.jpg",
+        "https://s3-media3.fl.yelpcdn.com/bphoto/oaSRaFqtFfAcNBl460ACRQ/o.jpg",
+        "https://s3-media3.fl.yelpcdn.com/bphoto/TgN4Ej3jfE33Vt-3c8Gv-Q/o.jpg"
+      ],
+      price: "$",
+      hours: [
+        {
+          open: [
+            {
+              is_overnight: false,
+              start: "1030",
+              end: "0000",
+              day: 0
+            },
+            {
+              is_overnight: false,
+              start: "1030",
+              end: "0000",
+              day: 1
+            },
+            {
+              is_overnight: false,
+              start: "1030",
+              end: "0000",
+              day: 2
+            },
+            {
+              is_overnight: true,
+              start: "1030",
+              end: "0100",
+              day: 3
+            },
+            {
+              is_overnight: true,
+              start: "1030",
+              end: "0100",
+              day: 4
+            },
+            {
+              is_overnight: true,
+              start: "1130",
+              end: "0100",
+              day: 5
+            },
+            {
+              is_overnight: false,
+              start: "1130",
+              end: "0000",
+              day: 6
+            }
+          ],
+          hours_type: "REGULAR",
+          is_open_now: true
+        }
+      ],
+      transactions: ["pickup", "delivery"]
+    };
+
+    buildRestaurantView(restaurant);
   }
 
   function buildRestaurantView(place) {
     console.log(place);
-    var reviews = $('<div>');
-    reviews.attr('id', 'reviews');
+    /** TODO: GET REVIEWS AND POPULATE **/
 
-    place.reviews.forEach(function (review) {
-      var html = `
-        <div class="review">
-          <header class="review-header row">
-          <div class="col-3 profile-photo">
-              <img src="${review.profile_photo_url}" class="img-fluid">
-            </div>
-            <div class="col-6 name">
-              <span class="rating rating-${review.rating}"></span>
-              <h3>${review.author_name}</h3>
-              <span class="small">${review.relative_time_description}</span>
-            </div>
-          </header>
-          <article class="review-body row">
-            <p class="reivew-text col">${review.text}</p>
-          </article>
-        </div>
-      `;
-
-      reviews.append(html);
-    });
-    console.log(reviews[0]);
     var restaurantView = `<aside id = "${place.name}" class="restaurant-view">
-      < h3 class="restaurant-name" > ${ place.name}</h3 >
+      <h3 class="restaurant-name"> ${place.name}</h3 >
         <div class="row">
-          <figure class="col">
-            <img src="${place.photos === undefined ? '' : place.photos[0].getUrl()}" class="img-thumbnail">
+          <figure class="col" id="restaurantMap">
           </figure>
             <div class="col" id="restaurant-info">
-              <address>${place.formatted_address}</address>
-              <span class="phone-number"><a href=tel: ${place.formatted_phone_number}">${place.formatted_phone_number}</a></span>
-            <p class="price-level price-level-${place.price_level}">Price level:</p>
-            <p class="rating-level rating-${place.rating}">Rating: ${place.rating}</p>
-            <p class="webiste">Website: <a href="${place.website}" target="_blank">${place.website}</a></p>
+              <address>${place.location.display_address[0]},
+              ${place.location.display_address[1]}</address>
+              <p class="phone-number"><a href="tel:${place.phone}">${place.phone}</a></p>
+              <p class="price-level price-level-${place.price}">Price level:</p>
+              <p class="rating-level rating-${place.rating}">Rating:</p>
+              <p class="webiste">Website: <a href="${place.url}" target="_blank">Website</a></p>
+            </div>
         </div>
-        ${reviews[0].outerHTML}
         <span class="btn close-btn">X</span>
       </aside>
     `;
 
     $('body').append(restaurantView);
-    presentMap();
+    presentMap(place.coordinates.latitude, place.coordinates.longitude, place);
   }
 
   // present map on page //
 
-  function presentMap(position) {
-    console.log('p', position);
+  function presentMap(lati, long, place) {
+    console.log('p', lati, long);
+    var mapCenter = new google.maps.LatLng(lati,long);
     // var loc = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 
-    var map = new google.maps.Map(document.getElementById('map'), { center: loc, zoom: 12 });
+    var restaurantMap = new google.maps.Map(document.getElementById('restaurantMap'), { center: mapCenter, zoom: 12 });
 
-    // $("#map").append(map);
-
-    dropPins();
+    dropPins(restaurantMap, place);
   }
 
   // create a function to show the drop pins on the map //
   // retrieve the results from user input //
   // drop pins with given restaurant results //
 
-  function dropPins() {
-
-    var map = new google.maps.Map(document.getElementById('map'), { center: loc, zoom: 12 });
-
-    for (var i = 0; i < restaurants.length; i++) {
+  function dropPins(map, items) {
+    var length;
+    console.log(items);
+    // var map = new google.maps.Map(document.getElementById('map'), { center: loc, zoom: 12 });
+    if( items.length === undefined ) {
+      length = 1;
+      console.log('resetting', length, items.length, 0 < items.length);
+    } else {
+      length = items.length;
+    }
+    for (var i = 0; i < length; i++) {
+      console.log(restaurants[i].coordinates.latitude);
       marker = new google.maps.Marker({
         map: map,
         draggable: true,
