@@ -12,25 +12,24 @@
 </head>
 
 <body>
-  <div class=container>
-    <div class="jumbotron jumbotron-fluid">
-      <div class="container">
-        <h1 class="display-4">Hamburger Finder</h1>
-        <p class="lead text-center">This is a modified Hamburger that occupies the entire horizontal space of its parent.</p>
+  <div class=container id="mainBucket">
+    <div class="jumbotron jumboHeaderImg">
+      <!-- <img src="assets/images/jumbotronBack.jpg"> -->
+      <div class="container" id="pickle">
+        <h1 class="display-4">What should I eat for lunch today?</h1>
+        <p class="lead text-center">A tool for indecisives to get lunch</p>
       </div>
     </div>
     <nav class="navbar navbar-light bg-light">
-      <a class="navbar-brand" href="#">
-        <img src="assets/images/yuck.jpg" width="30" height="30" class="d-inline-block align-top" alt="">
-        Bootstrap
-      </a>
+      <h3 align-text="left">I want . . .</h3>
     </nav>
     <div class="input-group mb-3">
-      <input type="text" class="form-control" id="food-input" placeholder="what'd you want to eat?" aria-label="Prompt for what you want to eat" aria-describedby="button-addon2" placeholder="pizza" value="pizza">
+      <input type="text" class="form-control" id="food-input" placeholder="what'd you want to eat?"
+        aria-label="Prompt for what you want to eat" aria-describedby="button-addon2" placeholder="pizza" value="pizza">
     </div>
     <div class="input-group mb-3">
-      <input type="text" class="form-control" id="allergy-input" placeholder="You's got any allergies" aria-label="Recipient's username"
-        aria-describedby="button-addon2">
+      <input type="text" class="form-control" id="allergy-input" placeholder="You's got any allergies"
+        aria-label="Recipient's username" aria-describedby="button-addon2">
     </div>
     <div class="input-group-append">
       <button class="btn btn-outline-secondary" type="button" id="button-submit">Submit</button>
@@ -52,7 +51,8 @@
   <script src='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js'
     integrity='sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy'
     crossorigin='anonymous'></script>
-  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCrLNbCMxqut58h7AFwofVtZQP59iEbnwE&libraries=places"></script>
+  <script type="text/javascript"
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCrLNbCMxqut58h7AFwofVtZQP59iEbnwE&libraries=places"></script>
   <script src="assets/js/app.js"></script>
 </body>
 

@@ -1,39 +1,51 @@
 .price-level-1:after {
   content: "$";
 }
+
 .price-level-2:after {
   content: "$$";
 }
+
 .price-level-3:after {
   content: "$$$$";
 }
+
 .price-level-4:after {
   content: "$$$$";
 }
+
 .price-level-5:after {
   content: "$$$$$";
 }
+
 .rating-1:after {
   content: "*";
 }
+
 .rating-2:after {
   content: "**";
 }
+
 .rating-3:after {
   content: "***";
 }
+
 .rating-4:after {
   content: "****";
 }
+
 .rating-5:after {
   content: "*****";
 }
+
 #map {
   min-height: 250px;
 }
+
 /** SINGLE RESTAURANT VIEW [START] **/
+
 .restaurant-view {
-  background-color: #fff;
+  b ackground-color: #fff;
   position: fixed;
   top: 5%;
   right: 0;
@@ -47,15 +59,61 @@
   z-index: 5;
   overflow: scroll;
 }
+
 /* .restaurant-view #restaurant-reviews {
   max-height: 200px;
   overflow: scroll;
 } */
+
 .restaurant-view #reviews .review {
   margin: 60px 0;
   border-bottom: 2px dashed #efefef;
 }
+
 .restaurant-view #reviews .review .review-header {
   margin-bottom: 30px;
 }
+
 /** SINGLE RESTAURANT VIEW [END] **/
+
+/* INDEX.HTML */
+body {
+  /* background-image: url('../images/jumbotronBack.jpg'); */
+
+}
+.jumboHeaderImg {
+  background-image: url('../images/jumbotronBack.jpg');
+  background-size: cover;
+}
+
+.container {
+  background-color: #3a81c8;
+ 
+}
+
+#pickle {
+  background-color: pink;
+  border: 2px solid black;
+  opacity: 0.6;
+  border-radius: .3rem;
+
+  
+}
+
+#pickle h1 {
+  /* text-decoration:; */
+  /* color: olivedrab; */
+    padding: 20px;
+    background: rgba(162, 52, 52, 0.584);
+    color: #fff;
+    border-radius: .3rem;
+    margin-top: 20px;
+
+} 
+
+.navbar {
+  border-radius: .3rem;
+  border: 5px groove gold;
+
+
+}
