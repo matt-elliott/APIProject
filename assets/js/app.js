@@ -37,6 +37,7 @@
     service = new google.maps.places.PlacesService(map);
     
     service.textSearch(request, function (response, status) {
+      console.log(status);
       if( status === google.maps.places.PlacesServiceStatus.OK ) {
         restaurants = response;
         buildListView();
