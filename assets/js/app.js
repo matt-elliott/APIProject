@@ -30,24 +30,16 @@
     //TODO : MOVE THIS VARIABLE INSIDE RESPONSE FUNCTION
     var response;
     
-    //GET https://api.yelp.com/v3/businesses/search?term=delis&latitude=37.786882&longitude=-122.399972
-    $.ajax({
-      queryUrl: `https://api.yelp.com/v3/businesses/search?term=${query}&latitdue=${lat}&longitude=${lng}`,
-      headers: {
-        Authorization: `Bearer ktigyrLk8IGtOoqqF4SB07jfVpMdNXYUuxDVfAKW_O5dAb4fa7megmQRsMeggxdnbc7Vma5Cx8qGcBLlZ0PFKLDKKz6xZX3GyZAijIWhmAn9tNeeHh3XAUYDQ_03WnYx`
-      },
-      method: 'GET',
-    }).then(function (response) {
-      console.log('got response!')
 
-      restaurants = response.businesses;
-      loc = new google.maps.LatLng(lat, lng);
-      map = new google.maps.Map(document.getElementById('map'), {
-        center: loc, zoom: 15
-      });
-
-      buildListView();
-      dropPins(map, restaurants);
+    service.textSearch(request, function (response, status) {
+      console.log(status);
+      if( status === google.maps.places.PlacesServiceStatus.OK ) {
+        restaurants = response;
+        buildListView();
+      } else {
+        console.error(status);
+        noResults();
+      }
     });
   }
 
