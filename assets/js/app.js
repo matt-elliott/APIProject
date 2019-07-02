@@ -33,19 +33,19 @@
     var lng = -118.4460542;
     console.log('getData', lat, lng);
     var query = $('#food-input').val();
-  
+
     $('#loader').show();
     $('#map').hide();
     $('#listView').hide();
 
     //TODO : MOVE THIS VARIABLE INSIDE RESPONSE FUNCTION
     var response;
-    
+
     $.ajax({
       url: `https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search?term=${query}&latitude=${lat}&longitude=${lng}&categories=restaurant`,
       headers: {
         Authorization: `Bearer ktigyrLk8IGtOoqqF4SB07jfVpMdNXYUuxDVfAKW_O5dAb4fa7megmQRsMeggxdnbc7Vma5Cx8qGcBLlZ0PFKLDKKz6xZX3GyZAijIWhmAn9tNeeHh3XAUYDQ_03WnYx`,
-        'X-Requested-With' : XMLHttpRequest
+        'X-Requested-With': XMLHttpRequest
       },
       longitude: lng,
       latitude: lat,
@@ -107,11 +107,11 @@
       method: 'GET',
       headers: {
         Authorization: `Bearer ktigyrLk8IGtOoqqF4SB07jfVpMdNXYUuxDVfAKW_O5dAb4fa7megmQRsMeggxdnbc7Vma5Cx8qGcBLlZ0PFKLDKKz6xZX3GyZAijIWhmAn9tNeeHh3XAUYDQ_03WnYx`,
-        'X-Requested-With' : 'XMLHttpRequest'
+        'X-Requested-With': 'XMLHttpRequest'
       },
-    }).then(function(response) {  
+    }).then(function (response) {
       buildRestaurantView(response);
-    });    
+    });
   }
 
   function buildRestaurantView(place) {
@@ -144,7 +144,7 @@
 
   function presentMap(lati, long, place) {
     console.log('p', lati, long);
-    var mapCenter = new google.maps.LatLng(lati,long);
+    var mapCenter = new google.maps.LatLng(lati, long);
     // var loc = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 
     var restaurantMap = new google.maps.Map(document.getElementById('restaurantMap'), { center: mapCenter, zoom: 12 });
@@ -160,7 +160,7 @@
     var length;
     console.log(items);
     // var map = new google.maps.Map(document.getElementById('map'), { center: loc, zoom: 12 });
-    if( items.length === undefined ) {
+    if (items.length === undefined) {
       length = 1;
       console.log('resetting', length, items.length, 0 < items.length);
     } else {
@@ -203,7 +203,7 @@
   // setTimeout(getLocation, 1500);
   $('#button-submit').on("click", getData);
   $('#button-submit').trigger("click");
- 
+
   // $('#button-submit').on("click", getLocation);
   //listeners
   $(document).on("click", '.restaurant-btn', loadSingleRestaurantView);
