@@ -49,8 +49,6 @@
           value="pizza"
         />
       </div>
-      <input type="checkbox" id="checkbox" v-model="checked" />
-      <label for="checkbox">Are you vegetarian or vegan?</label>
       <div class="input-group-append">
         <button
           class="btn btn-outline-secondary"
@@ -61,12 +59,12 @@
         </button>
       </div>
       <div id="map"></div>
-      <ul id="listView">
-        <li v-repeat="row">
-          {{ $value }}
-        </li>
-      </ul>
     </div>
+    <ul id="listView">
+      <li v-repeat="row">
+        {{ $value }}
+      </li>
+    </ul>
 
     <script
       src="https://code.jquery.com/jquery-3.4.1.min.js"

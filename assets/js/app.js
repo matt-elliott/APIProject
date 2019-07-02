@@ -3,6 +3,7 @@
   var loc;
   var map;
   var service;
+  var currentRestaurantId;
 
   function noResults() {
     $('#listView').html(`<div class="error"><h2>Nothing found, please try again</h2>`);
@@ -17,6 +18,7 @@
       warningView.attr('class', 'bg-warning text-dark');
       warningView.html('<h2>Nothing Found!</h2>');
     }
+
   }
 
   function showPosition(position) {
@@ -26,23 +28,18 @@
   function getData(lat, lng) {
     var lat = 34.0594726;
     var lng = -118.4460542;
-    console.log('getData', lat, lng);
     var query = $('#food-input').val();
-  
-    //TODO : MOVE THIS VARIABLE INSIDE RESPONSE FUNCTION
-    var response;
-    
+
     $.ajax({
       url: `https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search?term=${query}&latitude=${lat}&longitude=${lng}`,
       headers: {
         Authorization: `Bearer ktigyrLk8IGtOoqqF4SB07jfVpMdNXYUuxDVfAKW_O5dAb4fa7megmQRsMeggxdnbc7Vma5Cx8qGcBLlZ0PFKLDKKz6xZX3GyZAijIWhmAn9tNeeHh3XAUYDQ_03WnYx`,
-        'X-Requested-With' : XMLHttpRequest
+        'X-Requested-With': XMLHttpRequest
       },
       longitude: lng,
       latitude: lat,
       method: 'GET',
     }).then(function (response) {
-      console.log('got response!')
 
       restaurants = response.businesses;
       loc = new google.maps.LatLng(lat, lng);
@@ -57,7 +54,7 @@
 
   function buildListView() {
     $('#listView').empty();
-    console.log(restaurants);
+
     restaurants.forEach(function (item) {
       var itemID = item.id;
       var name = item.name === undefined ? '' : item.name;
@@ -80,23 +77,45 @@
   }
 
   function loadSingleRestaurantView() {
-    var restaurantID = $(this).attr('data-restaurant-id');
-    console.log(restaurantID);
+    currentRestaurantId = $(this).attr('data-restaurant-id');
+    getRestaurantDetails();
+  }
+  function getRestaurantDetails() {
     $.ajax({
-      url: `https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/${restaurantID}`,
+      url: `https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/${currentRestaurantId}`,
       method: 'GET',
       headers: {
         Authorization: `Bearer ktigyrLk8IGtOoqqF4SB07jfVpMdNXYUuxDVfAKW_O5dAb4fa7megmQRsMeggxdnbc7Vma5Cx8qGcBLlZ0PFKLDKKz6xZX3GyZAijIWhmAn9tNeeHh3XAUYDQ_03WnYx`,
-        'X-Requested-With' : 'XMLHttpRequest'
-      },
-    }).then(function(response) {  
+        'X-Requested-With': 'XMLHttpRequest'
+      }
+    }).then(function (response) {
+      var review = getReviews();
       buildRestaurantView(response);
-    });    
+      console.log(review)
+    });
   }
 
+  function getReviews() {
+    var review;
+
+    $.ajax({
+      url: `https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/${currentRestaurantId}/reviews`,
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ktigyrLk8IGtOoqqF4SB07jfVpMdNXYUuxDVfAKW_O5dAb4fa7megmQRsMeggxdnbc7Vma5Cx8qGcBLlZ0PFKLDKKz6xZX3GyZAijIWhmAn9tNeeHh3XAUYDQ_03WnYx`,
+        'X-Requested-With': 'XMLHttpRequest'
+      }
+    }).then(function (response) {
+      review = response;
+    });
+
+    return review;
+  }
   function buildRestaurantView(place) {
     console.log(place);
-    /** TODO: GET REVIEWS AND POPULATE **/
+
+
+
 
     var restaurantView = `<aside id = "${place.name}" class="restaurant-view">
       <h3 class="restaurant-name"> ${place.name}</h3 >
@@ -120,34 +139,25 @@
     presentMap(place.coordinates.latitude, place.coordinates.longitude, place);
   }
 
-  // present map on page //
 
   function presentMap(lati, long, place) {
     console.log('p', lati, long);
-    var mapCenter = new google.maps.LatLng(lati,long);
-    // var loc = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+    var mapCenter = new google.maps.LatLng(lati, long);
 
     var restaurantMap = new google.maps.Map(document.getElementById('restaurantMap'), { center: mapCenter, zoom: 12 });
 
     dropPins(restaurantMap, place);
   }
 
-  // create a function to show the drop pins on the map //
-  // retrieve the results from user input //
-  // drop pins with given restaurant results //
-
   function dropPins(map, items) {
     var length;
-    console.log(items);
-    // var map = new google.maps.Map(document.getElementById('map'), { center: loc, zoom: 12 });
-    if( items.length === undefined ) {
+    if (items.length === undefined) {
       length = 1;
       console.log('resetting', length, items.length, 0 < items.length);
     } else {
       length = items.length;
     }
     for (var i = 0; i < length; i++) {
-      console.log(restaurants[i].coordinates.latitude);
       marker = new google.maps.Marker({
         map: map,
         draggable: true,
@@ -160,7 +170,6 @@
 
       clearMarkers();
     }
-
     function clearMarkers() {
       markers = [];
 
@@ -179,13 +188,10 @@
       }
     }
   }
-  /** FOR TESTING **/
-  // setTimeout(getLocation, 1500);
+
   $('#button-submit').on("click", getData);
   $('#button-submit').trigger("click");
- 
-  // $('#button-submit').on("click", getLocation);
-  //listeners
+
   $(document).on("click", '.restaurant-btn', loadSingleRestaurantView);
   $(document).on("click", '.close-btn', function () {
     var parent = $(this).parent();
@@ -194,4 +200,5 @@
       parent.remove();
     }, 500);
   });
+
 })();
