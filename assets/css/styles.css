@@ -88,6 +88,7 @@ body {
 
 .container {
   background-color: #3a81c8;
+  padding: 1rem 2rem;
  
 }
 
@@ -114,6 +115,15 @@ body {
 .navbar {
   border-radius: .3rem;
   border: 5px groove gold;
+  margin-bottom: .5rem!important;
 
+}
 
+.mb-3, .my-3 {
+  margin-bottom: .3rem!important;
+}
+
+#button-submit {
+  margin-bottom: .5rem!important;
+  background-color: rebeccapurple;
 }
