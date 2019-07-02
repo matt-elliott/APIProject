@@ -5,8 +5,13 @@
   var service;
   var currentRestaurantId;
 
+  $('#loader').show();
+  $('#map').hide();
+  $('#listView').hide();
+
   function noResults() {
-    $('#listView').html(`<div class="error"><h2>Nothing found, please try again</h2>`);
+    $('#listView').html(`<div class="error col-12"><h2>Nothing found, please try again</h2>`);
+    $('#map').hide();
   }
 
   function getLocation() {
@@ -30,8 +35,15 @@
     var lng = -118.4460542;
     var query = $('#food-input').val();
 
+    $('#loader').show();
+    $('#map').hide();
+    $('#listView').hide();
+
+    //TODO : MOVE THIS VARIABLE INSIDE RESPONSE FUNCTION
+    var response;
+
     $.ajax({
-      url: `https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search?term=${query}&latitude=${lat}&longitude=${lng}`,
+      url: `https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search?term=${query}&latitude=${lat}&longitude=${lng}&categories=restaurant`,
       headers: {
         Authorization: `Bearer ktigyrLk8IGtOoqqF4SB07jfVpMdNXYUuxDVfAKW_O5dAb4fa7megmQRsMeggxdnbc7Vma5Cx8qGcBLlZ0PFKLDKKz6xZX3GyZAijIWhmAn9tNeeHh3XAUYDQ_03WnYx`,
         'X-Requested-With': XMLHttpRequest
@@ -42,6 +54,12 @@
     }).then(function (response) {
 
       restaurants = response.businesses;
+
+      if (restaurants.length === 0) {
+        noResults();
+        return;
+      }
+
       loc = new google.maps.LatLng(lat, lng);
       map = new google.maps.Map(document.getElementById('map'), {
         center: loc, zoom: 15
@@ -53,8 +71,11 @@
   }
 
   function buildListView() {
+    $('#loader').hide();
+    $('#map').show();
     $('#listView').empty();
-
+    $('#listView').show();
+    console.log(restaurants);
     restaurants.forEach(function (item) {
       var itemID = item.id;
       var name = item.name === undefined ? '' : item.name;
@@ -63,14 +84,16 @@
       var rating = item.rating === undefined ? '' : item.rating;
 
       var html = `
-        <div class="col-xs-12 col-md-6">
-          <h4><button class="btn btn-link restaurant-btn"
-            data-restaurant-id="${itemID}">${name}</button></h4>
-          <img src="https://maps.gstatic.com/mapfiles/place_api/icons/geocode-71.png">
-          <span class="price-level-${priceLevel}"></span>
-          <span class="${openNow}"></span>
-          <span class="${rating}"></span>
-        </div>`;
+        <li class="col-xs-12 col-md-6">
+          <div class="wrapper">
+            <h4><button class="btn btn-link restaurant-btn"
+              data-restaurant-id="${itemID}">${name}</button></h4>
+            <img src="https://maps.gstatic.com/mapfiles/place_api/icons/geocode-71.png">
+            <span class="price-level-${priceLevel}"></span>
+            <span class="${openNow}"></span>
+            <span class="${rating}"></span>
+          </div>
+        </li>`;
 
       $('#listView').append(html);
     });
@@ -87,11 +110,9 @@
       headers: {
         Authorization: `Bearer ktigyrLk8IGtOoqqF4SB07jfVpMdNXYUuxDVfAKW_O5dAb4fa7megmQRsMeggxdnbc7Vma5Cx8qGcBLlZ0PFKLDKKz6xZX3GyZAijIWhmAn9tNeeHh3XAUYDQ_03WnYx`,
         'X-Requested-With': 'XMLHttpRequest'
-      }
+      },
     }).then(function (response) {
-      var review = getReviews();
       buildRestaurantView(response);
-      console.log(review)
     });
   }
 
