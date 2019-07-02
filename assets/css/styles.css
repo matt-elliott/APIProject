@@ -62,3 +62,6 @@
 #map {
   min-height: 550px !important;
 }
+#listView {
+  display: inline-block;
+}

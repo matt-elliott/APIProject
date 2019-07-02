@@ -49,16 +49,6 @@
           value="pizza"
         />
       </div>
-      <div class="input-group mb-3">
-        <input
-          type="text"
-          class="form-control"
-          id="allergy-input"
-          placeholder="You's got any allergies"
-          aria-label="Recipient's username"
-          aria-describedby="button-addon2"
-        />
-      </div>
       <input type="checkbox" id="checkbox" v-model="checked" />
       <label for="checkbox">Are you vegetarian or vegan?</label>
       <div class="input-group-append">
@@ -70,10 +60,9 @@
           Submit
         </button>
       </div>
-
       <div id="map"></div>
       <ul id="listView">
-        <li v-repeat="col">
+        <li v-repeat="row">
           {{ $value }}
         </li>
       </ul>
