@@ -11,11 +11,12 @@
   function noResults() {
     $('#listView').html(`<div class="error col-12"><h2>Nothing found, please try again</h2>`);
     $('#map').hide();
+    $('#listView').show();
+    $('#loader').hide();
   }
 
   function getLocation() {
     if (navigator.geolocation) {
-      console.log('show');
       navigator.geolocation.getCurrentPosition(showPosition);
     } else {
       var warningView = $('body').attr('<aside>');
@@ -31,15 +32,11 @@
   function getData(lat, lng) {
     var lat = 34.0594726;
     var lng = -118.4460542;
-    console.log('getData', lat, lng);
     var query = $('#food-input').val();
   
     $('#loader').show();
     $('#map').hide();
     $('#listView').hide();
-
-    //TODO : MOVE THIS VARIABLE INSIDE RESPONSE FUNCTION
-    var response;
     
     $.ajax({
       url: `https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search?term=${query}&latitude=${lat}&longitude=${lng}&categories=restaurant`,
@@ -47,15 +44,14 @@
         Authorization: `Bearer ktigyrLk8IGtOoqqF4SB07jfVpMdNXYUuxDVfAKW_O5dAb4fa7megmQRsMeggxdnbc7Vma5Cx8qGcBLlZ0PFKLDKKz6xZX3GyZAijIWhmAn9tNeeHh3XAUYDQ_03WnYx`,
         'X-Requested-With' : XMLHttpRequest
       },
-      longitude: lng,
-      latitude: lat,
       method: 'GET',
     }).then(function (response) {
       console.log('got response!')
 
       restaurants = response.businesses;
-
+      console.log(restaurants.length);
       if (restaurants.length === 0) {
+        console.log('no results');
         noResults();
         return;
       }
@@ -75,7 +71,7 @@
     $('#map').show();
     $('#listView').empty();
     $('#listView').show();
-    console.log(restaurants);
+
     restaurants.forEach(function (item) {
       var itemID = item.id;
       var name = item.name === undefined ? '' : item.name;
@@ -101,7 +97,7 @@
 
   function loadSingleRestaurantView() {
     var restaurantID = $(this).attr('data-restaurant-id');
-    console.log(restaurantID);
+
     $.ajax({
       url: `https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/${restaurantID}`,
       method: 'GET',
@@ -115,7 +111,7 @@
   }
 
   function buildRestaurantView(place) {
-    console.log(place);
+
     /** TODO: GET REVIEWS AND POPULATE **/
 
     var restaurantView = `<aside id = "${place.name}" class="restaurant-view">
@@ -143,7 +139,6 @@
   // present map on page //
 
   function presentMap(lati, long, place) {
-    console.log('p', lati, long);
     var mapCenter = new google.maps.LatLng(lati,long);
     // var loc = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 
@@ -158,16 +153,14 @@
 
   function dropPins(map, items) {
     var length;
-    console.log(items);
     // var map = new google.maps.Map(document.getElementById('map'), { center: loc, zoom: 12 });
     if( items.length === undefined ) {
       length = 1;
-      console.log('resetting', length, items.length, 0 < items.length);
     } else {
       length = items.length;
     }
+
     for (var i = 0; i < length; i++) {
-      console.log(restaurants[i].coordinates.latitude);
       marker = new google.maps.Marker({
         map: map,
         draggable: true,
