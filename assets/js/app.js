@@ -66,14 +66,16 @@
       var rating = item.rating === undefined ? '' : item.rating;
 
       var html = `
-        <div class="col-xs-12 col-md-6">
-          <h4><button class="btn btn-link restaurant-btn"
-            data-restaurant-id="${itemID}">${name}</button></h4>
-          <img src="https://maps.gstatic.com/mapfiles/place_api/icons/geocode-71.png">
-          <span class="price-level-${priceLevel}"></span>
-          <span class="${openNow}"></span>
-          <span class="${rating}"></span>
-        </div>`;
+        <li class="col-xs-12 col-md-6">
+          <div class="wrapper">
+            <h4><button class="btn btn-link restaurant-btn"
+              data-restaurant-id="${itemID}">${name}</button></h4>
+            <img src="https://maps.gstatic.com/mapfiles/place_api/icons/geocode-71.png">
+            <span class="price-level-${priceLevel}"></span>
+            <span class="${openNow}"></span>
+            <span class="${rating}"></span>
+          </div>
+        </li>`;
 
       $('#listView').append(html);
     });
