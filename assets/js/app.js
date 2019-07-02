@@ -23,6 +23,7 @@
     getData(position.coords.latitude, position.coords.longitude);
   }
 
+
   function getData(lat, lng) {
     var lat = 34.0594726;
     var lng = -118.4460542;
@@ -49,10 +50,6 @@
       map = new google.maps.Map(document.getElementById('map'), {
         center: loc, zoom: 15
       });
-
-      buildListView();
-      dropPins(map, restaurants);
-    });
   }
 
   function buildListView() {
