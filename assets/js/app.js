@@ -2,7 +2,7 @@
   var restaurants = [];
   var loc;
   var map;
-  var service; 
+  var service;
 
   function noResults() {
     $('#listView').html(`<div class="error"><h2>Nothing found, please try again</h2>`);
@@ -10,6 +10,7 @@
 
   function getLocation() {
     if (navigator.geolocation) {
+      console.log('show');
       navigator.geolocation.getCurrentPosition(showPosition);
     } else {
       var warningView = $('body').attr('<aside>');
@@ -19,45 +20,48 @@
   }
 
   function showPosition(position) {
-    getData(position);
+    getData(position.coords.latitude, position.coords.longitude);
   }
 
-  function getData(position) {
-    //  loc = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-    map = new google.maps.Map(document.getElementById('map'), { center: { lat: 34.0594726, lng: -118.4460542 }, zoom: 12 });
-    
-    var input = $('#food-input').val();
-    var request = {
-      query: input,
-      location: { lat: 34.0594726, lng: -118.4460542 },
-      radius: 15,
-      type: 'restaurant'
-    };
+  function getData(lat, lng) {
+    console.log('getData', position)
+    var query = $('#food-input').val();
 
-    service = new google.maps.places.PlacesService(map);
+    //TODO : MOVE THIS VARIABLE INSIDE RESPONSE FUNCTION
+    var response;
     
-    service.textSearch(request, function (response, status) {
-      if( status === google.maps.places.PlacesServiceStatus.OK ) {
-        restaurants = response;
-        buildListView();
-      } else {
-        console.error(status);
-        noResults();
-      }
+    //GET https://api.yelp.com/v3/businesses/search?term=delis&latitude=37.786882&longitude=-122.399972
+    $.ajax({
+      queryUrl: `https://api.yelp.com/v3/businesses/search?term=${query}&latitdue=${lat}&longitude=${lng}`,
+      headers: {
+        Authorization: `Bearer ktigyrLk8IGtOoqqF4SB07jfVpMdNXYUuxDVfAKW_O5dAb4fa7megmQRsMeggxdnbc7Vma5Cx8qGcBLlZ0PFKLDKKz6xZX3GyZAijIWhmAn9tNeeHh3XAUYDQ_03WnYx`
+      },
+      method: 'GET',
+    }).then(function (response) {
+      console.log('got response!')
+
+      restaurants = response.businesses;
+      loc = new google.maps.LatLng(lat, lng);
+      map = new google.maps.Map(document.getElementById('map'), {
+        center: loc, zoom: 15
+      });
+
+      buildListView();
+      dropPins(map, restaurants);
     });
   }
 
   function buildListView() {
     $('#listView').empty();
-
+    console.log(restaurants);
     restaurants.forEach(function (item) {
-      var itemID = item.place_id;
+      var itemID = item.id;
       var name = item.name === undefined ? '' : item.name;
       var priceLevel = item.price_level === undefined ? '' : item.price_level;
       var openNow = item.opening_hours === undefined ? '' : item.opening_hours.open_now;
       var rating = item.rating === undefined ? '' : item.rating;
 
-      var html =`
+      var html = `
         <div class="col-xs-12 col-md-6">
           <h4><button class="btn btn-link restaurant-btn"
             data-restaurant-id="${itemID}">${name}</button></h4>
@@ -73,78 +77,117 @@
 
   function loadSingleRestaurantView() {
     var restaurantID = $(this).attr('data-restaurant-id');
-    var request = {
-      placeId: restaurantID
-    }
-
-    service.getDetails(request, function(place, status) {
-      if( status === google.maps.places.PlacesServiceStatus.OK ) {
-        buildRestaurantView(place);
-      } else {
-        console.error(status);
-      }
-    });
+    
+    $.ajax({
+      url: `https://api.yelp.com/v3/businesses/${restaurantID}`,
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ktigyrLk8IGtOoqqF4SB07jfVpMdNXYUuxDVfAKW_O5dAb4fa7megmQRsMeggxdnbc7Vma5Cx8qGcBLlZ0PFKLDKKz6xZX3GyZAijIWhmAn9tNeeHh3XAUYDQ_03WnYx`
+      },
+    }).then(function(response) {
+      console.log(response);
+      var restaurant = response.businesses;
+      buildRestaurantView(restaurant);
+    });    
   }
-  
+
   function buildRestaurantView(place) {
     console.log(place);
-    var reviews = $('<div>');
-    reviews.attr('id','reviews');
-    
-    place.reviews.forEach(function(review) {
-      var html = `
-        <div class="review">
-          <header class="review-header row">
-          <div class="col-3 profile-photo">
-              <img src="${review.profile_photo_url}" class="img-fluid">
-            </div>
-            <div class="col-6 name">
-              <span class="rating rating-${review.rating}"></span>
-              <h3>${review.author_name}</h3>
-              <span class="small">${review.relative_time_description}</span>
-            </div>
-          </header>
-          <article class="review-body row">
-            <p class="reivew-text col">${review.text}</p>
-          </article>
-        </div>
-      `;
+    /** TODO: GET REVIEWS AND POPULATE **/
 
-      reviews.append(html);
-    });
-    console.log(reviews[0]);
-    var restaurantView = `
-      <aside id="${place.name}" class="restaurant-view">
-        <h3 class="restaurant-name">${place.name}</h3>
+    var restaurantView = `<aside id = "${place.name}" class="restaurant-view">
+      <h3 class="restaurant-name"> ${place.name}</h3 >
         <div class="row">
-          <figure class="col">
-            <img src="${place.photos === undefined ? '' :  place.photos[0].getUrl()}" class="img-thumbnail">
+          <figure class="col" id="restaurantMap">
           </figure>
-          <div class="col" id="restaurant-info">
-            <address>${place.formatted_address}</address>
-            <span class="phone-number"><a href=tel:${place.formatted_phone_number}">${place.formatted_phone_number}</a></span>
-            <p class="price-level price-level-${place.price_level}">Price level:</p>
-            <p class="rating-level rating-${place.rating}">Rating: ${place.rating}</p>
-            <p class="webiste">Website: <a href="${place.website}" target="_blank">${place.website}</a></p>
-          </div>
+            <div class="col" id="restaurant-info">
+              <address>${place.location.display_address[0]},
+              ${place.location.display_address[1]}</address>
+              <p class="phone-number"><a href="tel:${place.phone}">${place.phone}</a></p>
+              <p class="price-level price-level-${place.price}">Price level:</p>
+              <p class="rating-level rating-${place.rating}">Rating:</p>
+              <p class="webiste">Website: <a href="${place.url}" target="_blank">Website</a></p>
+            </div>
         </div>
-        ${reviews[0].outerHTML}
         <span class="btn close-btn">X</span>
       </aside>
     `;
+
     $('body').append(restaurantView);
-  }  
+    presentMap(place.coordinates.latitude, place.coordinates.longitude, place);
+  }
 
-  // $('#button-submit').on("click", getLocation);
-  $('#button-submit').on("click", getData);
-  $('#button-submit').trigger("click");
+  // present map on page //
 
+  function presentMap(lati, long, place) {
+    console.log('p', lati, long);
+    var mapCenter = new google.maps.LatLng(lati,long);
+    // var loc = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+
+    var restaurantMap = new google.maps.Map(document.getElementById('restaurantMap'), { center: mapCenter, zoom: 12 });
+
+    dropPins(restaurantMap, place);
+  }
+
+  // create a function to show the drop pins on the map //
+  // retrieve the results from user input //
+  // drop pins with given restaurant results //
+
+  function dropPins(map, items) {
+    var length;
+    console.log(items);
+    // var map = new google.maps.Map(document.getElementById('map'), { center: loc, zoom: 12 });
+    if( items.length === undefined ) {
+      length = 1;
+      console.log('resetting', length, items.length, 0 < items.length);
+    } else {
+      length = items.length;
+    }
+    for (var i = 0; i < length; i++) {
+      console.log(restaurants[i].coordinates.latitude);
+      marker = new google.maps.Marker({
+        map: map,
+        draggable: true,
+        animation: google.maps.Animation.DROP,
+        position: {
+          lat: restaurants[i].coordinates.latitude,
+          lng: restaurants[i].coordinates.longitude
+        }
+      });
+
+      clearMarkers();
+    }
+
+    function clearMarkers() {
+      markers = [];
+
+      for (var i = 0; i < markers.length; i++) {
+        markers[i].setMap(null);
+      }
+    }
+
+    marker.addListener('click', toggleBounce);
+
+    function toggleBounce() {
+      if (marker.getAnimation() !== null) {
+        marker.setAnimation(null);
+      } else {
+        marker.setAnimation(google.maps.Animation.BOUNCE);
+      }
+    }
+  }
+  /** FOR TESTING **/
+  // setTimeout(getLocation, 1500);
+  // $('#button-submit').on("click", getData);
+  // $('#button-submit').trigger("click");
+ 
+  $('#button-submit').on("click", getLocation);
   //listeners
   $(document).on("click", '.restaurant-btn', loadSingleRestaurantView);
-  $(document).on("click", '.close-btn', function() {
+  $(document).on("click", '.close-btn', function () {
     var parent = $(this).parent();
     parent.fadeOut('slow');
-    setTimeout(function() {
+    setTimeout(function () {
       parent.remove();
     }, 500);
   });

@@ -59,3 +59,6 @@
   margin-bottom: 30px;
 }
 /** SINGLE RESTAURANT VIEW [END] **/
+#restaurantMap {
+  min-height: 550px !important;
+}
