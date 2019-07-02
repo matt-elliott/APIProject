@@ -24,7 +24,6 @@
     getData(position.coords.latitude, position.coords.longitude);
   }
 
-
   function getData(lat, lng) {
     var lat = 34.0594726;
     var lng = -118.4460542;
@@ -35,7 +34,7 @@
     var response;
     
     $.ajax({
-      url: `https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search?term=${query}&latitude=${lat}&longitude=${lng}&categories=restaurants`,
+      url: `https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search?term=${query}&latitude=${lat}&longitude=${lng}&categories=restaurant`,
       headers: {
         Authorization: `Bearer ktigyrLk8IGtOoqqF4SB07jfVpMdNXYUuxDVfAKW_O5dAb4fa7megmQRsMeggxdnbc7Vma5Cx8qGcBLlZ0PFKLDKKz6xZX3GyZAijIWhmAn9tNeeHh3XAUYDQ_03WnYx`,
         'X-Requested-With' : XMLHttpRequest
@@ -57,6 +56,10 @@
       map = new google.maps.Map(document.getElementById('map'), {
         center: loc, zoom: 15
       });
+
+      buildListView();
+      dropPins(map, restaurants);
+    });
   }
 
   function buildListView() {
