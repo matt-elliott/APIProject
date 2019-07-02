@@ -4,6 +4,10 @@
   var map;
   var service;
 
+  $('#loader').show();
+  $('#map').hide();
+  $('#listView').hide();
+
   function noResults() {
     $('#listView').html(`<div class="error col-12"><h2>Nothing found, please try again</h2>`);
     $('#map').hide();
@@ -30,6 +34,10 @@
     console.log('getData', lat, lng);
     var query = $('#food-input').val();
   
+    $('#loader').show();
+    $('#map').hide();
+    $('#listView').hide();
+
     //TODO : MOVE THIS VARIABLE INSIDE RESPONSE FUNCTION
     var response;
     
@@ -63,8 +71,10 @@
   }
 
   function buildListView() {
+    $('#loader').hide();
     $('#map').show();
     $('#listView').empty();
+    $('#listView').show();
     console.log(restaurants);
     restaurants.forEach(function (item) {
       var itemID = item.id;
