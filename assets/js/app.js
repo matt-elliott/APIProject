@@ -33,7 +33,7 @@
       radius: 15,
       type: 'restaurant'
     };
-
+ 
     service = new google.maps.places.PlacesService(map);
     
     service.textSearch(request, function (response, status) {
