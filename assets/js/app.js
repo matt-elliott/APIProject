@@ -24,18 +24,22 @@
   }
 
   function getData(lat, lng) {
-    console.log('getData', position)
+    var lat = 34.0594726;
+    var lng = -118.4460542;
+    console.log('getData', lat, lng);
     var query = $('#food-input').val();
-
+  
     //TODO : MOVE THIS VARIABLE INSIDE RESPONSE FUNCTION
     var response;
     
-    //GET https://api.yelp.com/v3/businesses/search?term=delis&latitude=37.786882&longitude=-122.399972
     $.ajax({
-      queryUrl: `https://api.yelp.com/v3/businesses/search?term=${query}&latitdue=${lat}&longitude=${lng}`,
+      url: `https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search?term=${query}&latitude=${lat}&longitude=${lng}`,
       headers: {
-        Authorization: `Bearer ktigyrLk8IGtOoqqF4SB07jfVpMdNXYUuxDVfAKW_O5dAb4fa7megmQRsMeggxdnbc7Vma5Cx8qGcBLlZ0PFKLDKKz6xZX3GyZAijIWhmAn9tNeeHh3XAUYDQ_03WnYx`
+        Authorization: `Bearer ktigyrLk8IGtOoqqF4SB07jfVpMdNXYUuxDVfAKW_O5dAb4fa7megmQRsMeggxdnbc7Vma5Cx8qGcBLlZ0PFKLDKKz6xZX3GyZAijIWhmAn9tNeeHh3XAUYDQ_03WnYx`,
+        'X-Requested-With' : XMLHttpRequest
       },
+      longitude: lng,
+      latitude: lat,
       method: 'GET',
     }).then(function (response) {
       console.log('got response!')
@@ -77,17 +81,16 @@
 
   function loadSingleRestaurantView() {
     var restaurantID = $(this).attr('data-restaurant-id');
-    
+    console.log(restaurantID);
     $.ajax({
-      url: `https://api.yelp.com/v3/businesses/${restaurantID}`,
+      url: `https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/${restaurantID}`,
       method: 'GET',
       headers: {
-        Authorization: `Bearer ktigyrLk8IGtOoqqF4SB07jfVpMdNXYUuxDVfAKW_O5dAb4fa7megmQRsMeggxdnbc7Vma5Cx8qGcBLlZ0PFKLDKKz6xZX3GyZAijIWhmAn9tNeeHh3XAUYDQ_03WnYx`
+        Authorization: `Bearer ktigyrLk8IGtOoqqF4SB07jfVpMdNXYUuxDVfAKW_O5dAb4fa7megmQRsMeggxdnbc7Vma5Cx8qGcBLlZ0PFKLDKKz6xZX3GyZAijIWhmAn9tNeeHh3XAUYDQ_03WnYx`,
+        'X-Requested-With' : 'XMLHttpRequest'
       },
-    }).then(function(response) {
-      console.log(response);
-      var restaurant = response.businesses;
-      buildRestaurantView(restaurant);
+    }).then(function(response) {  
+      buildRestaurantView(response);
     });    
   }
 
@@ -178,10 +181,10 @@
   }
   /** FOR TESTING **/
   // setTimeout(getLocation, 1500);
-  // $('#button-submit').on("click", getData);
-  // $('#button-submit').trigger("click");
+  $('#button-submit').on("click", getData);
+  $('#button-submit').trigger("click");
  
-  $('#button-submit').on("click", getLocation);
+  // $('#button-submit').on("click", getLocation);
   //listeners
   $(document).on("click", '.restaurant-btn', loadSingleRestaurantView);
   $(document).on("click", '.close-btn', function () {
