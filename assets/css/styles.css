@@ -52,7 +52,7 @@
   bottom: 5%;
   left: 0;
   max-width: 65%;
-  height: auto;
+  height: 50vh;
   padding: 15px;
   border: 1px solid #a3a3a3;
   box-shadow: 0 0 5px #444;
@@ -152,4 +152,12 @@
 }
 form {
   width: 100%;
+}
+.restaurant-view .close-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 8px 13px;
+  border: 2px solid #000;
+  border-radius: 65%;
 }

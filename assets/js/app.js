@@ -145,7 +145,7 @@
               <p class="webiste">Website: <a href="${place.url}" target="_blank">Website</a></p>
             </div>
         </div>
-        <span class="btn close-btn">close</span>
+        <span class="btn close-btn">X</span>
       </aside>
     `;
 
