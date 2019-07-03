@@ -35,7 +35,7 @@
         getData();
         map.setCenter(loc);
       }, function() {
-        console.log('success', loc);
+        console.log('success', lat,lng, loc);
       });
     } else {
       console.log('html5 geolocation failed')
