@@ -90,10 +90,11 @@
     $('#listView').show();
 
     restaurants.forEach(function (item) {
+      console.log(item);
       var itemID = item.id;
       var name = item.name === undefined ? '' : item.name;
-      var priceLevel = item.price_level === undefined ? '' : item.price_level;
-      var openNow = item.opening_hours === undefined ? '' : item.opening_hours.open_now;
+      var priceLevel = item.price === undefined ? '' : item.price;
+      var openNow = item.is_closed === undefined ? '' : item.is_closed;
       var rating = item.rating === undefined ? '' : item.rating;
 
       var html = `
@@ -101,10 +102,9 @@
           <div class="wrapper">
             <h4><button class="btn btn-link restaurant-btn"
               data-restaurant-id="${itemID}">${name}</button></h4>
-            <img src="https://maps.gstatic.com/mapfiles/place_api/icons/geocode-71.png">
-            <span class="price-level-${priceLevel}"></span>
-            <span class="${openNow}"></span>
-            <span class="${rating}"></span>
+            <span class="price-level">${priceLevel}</span>
+            <span class="open-${openNow}"></span>
+            <span class="rating-${rating}"></span>
           </div>
         </li>`;
 

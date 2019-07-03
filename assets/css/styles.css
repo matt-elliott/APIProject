@@ -1,43 +1,60 @@
-.price-level-1:after {
+body {
+  width: 100%;
+  height: 100%;
+  background-image: url('../images/jumbotronBack.jpg');
+  background-size: 45%;
+}
+body > .container {
+  margin-top: 5vh;
+}
+.price-1:after {
   content: "$";
 }
 
-.price-level-2:after {
+.price-2:after {
   content: "$$";
 }
 
-.price-level-3:after {
+.price-3:after {
   content: "$$$$";
 }
 
-.price-level-4:after {
+.price-4:after {
   content: "$$$$";
 }
 
-.price-level-5:after {
+.price-5:after {
   content: "$$$$$";
 }
 
 .rating-1:after {
-  content: "*";
+  content: "\2605";
 }
 
 .rating-2:after {
-  content: "**";
+  content: "\2605\2605";
 }
 
 .rating-3:after {
-  content: "***";
+  content: "\2605\2605\2605";
 }
 
 .rating-4:after {
-  content: "****";
+  content: "\2605\2605\2605\2605\2605";
 }
 
 .rating-5:after {
-  content: "*****";
+  content: "\2605\2605\2605\2605\2605";
 }
-
+.open-false:after {
+  content: 'Open Now';
+}
+.open-true:after {
+  content: 'Closed';
+}
+.restaurant-btn {
+  padding: 0;
+}
 #map {
   min-height: 250px;
 }
@@ -85,20 +102,12 @@
   min-height: 550px !important;
 }
 
-#listView {
-  /* display: inline-block; */
-  padding-inline-start: 0;
-}
-
 /** SINGLE RESTAURANT VIEW [END] **/
 
 /* INDEX.HTML */
-
-.jumboHeaderImg {
-  background-image: url('../images/jumbotronBack.jpg');
-  background-size: cover;
+.jumbotron {
+  padding: 0;
 }
-
 .container {
   background-color: #3a81c8;
   padding: 1rem 2rem;
@@ -139,12 +148,22 @@
 #listView {
   padding: 30px 0;
   list-style: none;
+  padding-inline-start: 0;
 }
 
 #listView .wrapper {
   background-color: #efefef;
   margin-bottom: 15px;
   padding: 15px;
+  min-height: 140px;
+}
+
+#listView li .wrapper h4 {
+  font-weight: bold;
+}
+#listView li .wrapper span {
+  display: block;
+  font-size: 12px;
 }
 
 #loader {
