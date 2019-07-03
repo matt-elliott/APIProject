@@ -45,19 +45,24 @@
 /** SINGLE RESTAURANT VIEW [START] **/
 
 .restaurant-view {
-  background-color: #fff;
+  background-color: rgb(255, 225, 198);
   position: fixed;
   top: 5%;
   right: 0;
   bottom: 5%;
   left: 0;
-  /* max-width: 65%; */
-  height: 90%;
+  max-width: 65%;
+  height: auto;
   padding: 15px;
   border: 1px solid #a3a3a3;
   box-shadow: 0 0 5px #444;
   z-index: 5;
   overflow: scroll;
+  border-radius: .3rem;
+  display: table;
+  width: 60%;
+  margin: auto;
+  font: 14px/1.5 Helvetica, sans-serif;
 }
 
 /* .restaurant-view #restaurant-reviews {
@@ -73,10 +78,13 @@
 .restaurant-view #reviews .review .review-header {
   margin-bottom: 30px;
 }
+
 /** SINGLE RESTAURANT VIEW [END] **/
+
 #restaurantMap {
   min-height: 550px !important;
 }
+
 #listView {
   /* display: inline-block; */
   padding-inline-start: 0;
@@ -85,6 +93,7 @@
 /** SINGLE RESTAURANT VIEW [END] **/
 
 /* INDEX.HTML */
+
 .jumboHeaderImg {
   background-image: url('../images/jumbotronBack.jpg');
   background-size: cover;
@@ -105,18 +114,17 @@
 #pickle h1 {
   /* text-decoration:; */
   /* color: olivedrab; */
-    padding: 20px;
-    background: rgba(162, 52, 52, 0.584);
-    color: #fff;
-    border-radius: .3rem;
-    margin-top: 20px;
-} 
+  padding: 20px;
+  background: rgba(162, 52, 52, 0.584);
+  color: #fff;
+  border-radius: .3rem;
+  margin-top: 20px;
+}
 
 .navbar {
   border-radius: .3rem;
   border: 5px groove gold;
   margin-bottom: .5rem!important;
-
 }
 
 .mb-3, .my-3 {
@@ -127,15 +135,18 @@
   margin-bottom: .5rem!important;
   background-color: rebeccapurple;
 }
+
 #listView {
   padding: 30px 0;
   list-style: none;
 }
+
 #listView .wrapper {
   background-color: #efefef;
   margin-bottom: 15px;
   padding: 15px;
 }
+
 #loader {
   text-align: center;
 }
