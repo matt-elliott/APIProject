@@ -1,58 +1,71 @@
 (function () {
   var restaurants = [];
   var loc;
+  var lat;
+  var lng;
   var map;
   var service;
-
-  $('#loader').show();
-  $('#map').hide();
-  $('#listView').hide();
 
   function noResults() {
     $('#listView').html(`<div class="error col-12"><h2>Nothing found, please try again</h2>`);
     $('#map').hide();
+    $('#listView').show();
+    $('#loader').hide();
   }
 
   function getLocation() {
-    if (navigator.geolocation) {
-      console.log('show');
-      navigator.geolocation.getCurrentPosition(showPosition);
+    event.preventDefault();
+    map = new google.maps.Map(document.getElementById('map'), {
+      center: {
+        lat: 34.0207305,
+        lng: -118.6919308
+      },
+      zoom: 18
+    })
+
+    if(navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        lat = position.coords.latitude;
+        lng = position.coords.longitude;
+
+        loc = new google.maps.LatLng(lat, lng);
+        getData();
+        map.setCenter(loc);
+      }, function(error) {
+        $.ajax({
+          url: 'https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyCrLNbCMxqut58h7AFwofVtZQP59iEbnwE',
+          method: 'POST'
+        }).then(function(response) {
+          lat = response.location.lat;
+          lng = response.location.lng;
+
+          loc = new google.maps.LatLng(lat, lng);
+          getData();
+          map.setCenter(loc);
+        })
+
+      }, {timeout:5000, enableHighAccuracy: true});
     } else {
-      var warningView = $('body').attr('<aside>');
-      warningView.attr('class', 'bg-warning text-dark');
-      warningView.html('<h2>Nothing Found!</h2>');
+      $('#listView').append('<div class="restaurant-view"><h2>We\'re Sorry, we were unable to find you.</h2></div>');
     }
   }
 
-  function showPosition(position) {
-    getData(position.coords.latitude, position.coords.longitude);
-  }
-
-  function getData(lat, lng) {
-    var lat = 34.0594726;
-    var lng = -118.4460542;
-    console.log('getData', lat, lng);
+  function getData() {
     var query = $('#food-input').val();
-  
+    var latitude = loc.lat();
+
     $('#loader').show();
     $('#map').hide();
     $('#listView').hide();
-
-    //TODO : MOVE THIS VARIABLE INSIDE RESPONSE FUNCTION
-    var response;
     
     $.ajax({
-      url: `https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search?term=${query}&latitude=${lat}&longitude=${lng}&categories=restaurant`,
+      url: `https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search?term=${query}&latitude=${loc.lat()}&longitude=${loc.lng()}&categories=restaurants`,
       headers: {
         Authorization: `Bearer ktigyrLk8IGtOoqqF4SB07jfVpMdNXYUuxDVfAKW_O5dAb4fa7megmQRsMeggxdnbc7Vma5Cx8qGcBLlZ0PFKLDKKz6xZX3GyZAijIWhmAn9tNeeHh3XAUYDQ_03WnYx`,
         'X-Requested-With' : XMLHttpRequest
       },
-      longitude: lng,
-      latitude: lat,
       method: 'GET',
     }).then(function (response) {
-      console.log('got response!')
-
       restaurants = response.businesses;
 
       if (restaurants.length === 0) {
@@ -60,9 +73,9 @@
         return;
       }
 
-      loc = new google.maps.LatLng(lat, lng);
+      // loc = new google.maps.LatLng(lat, lng);
       map = new google.maps.Map(document.getElementById('map'), {
-        center: loc, zoom: 15
+        center: loc, zoom: 13, radius: 1000
       });
 
       buildListView();
@@ -75,7 +88,7 @@
     $('#map').show();
     $('#listView').empty();
     $('#listView').show();
-    console.log(restaurants);
+
     restaurants.forEach(function (item) {
       var itemID = item.id;
       var name = item.name === undefined ? '' : item.name;
@@ -101,7 +114,7 @@
 
   function loadSingleRestaurantView() {
     var restaurantID = $(this).attr('data-restaurant-id');
-    console.log(restaurantID);
+
     $.ajax({
       url: `https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/${restaurantID}`,
       method: 'GET',
@@ -115,7 +128,7 @@
   }
 
   function buildRestaurantView(place) {
-    console.log(place);
+
     /** TODO: GET REVIEWS AND POPULATE **/
 
     var restaurantView = `<aside id = "${place.name}" class="restaurant-view">
@@ -143,7 +156,6 @@
   // present map on page //
 
   function presentMap(lati, long, place) {
-    console.log('p', lati, long);
     var mapCenter = new google.maps.LatLng(lati,long);
     // var loc = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 
@@ -158,16 +170,14 @@
 
   function dropPins(map, items) {
     var length;
-    console.log(items);
     // var map = new google.maps.Map(document.getElementById('map'), { center: loc, zoom: 12 });
     if( items.length === undefined ) {
       length = 1;
-      console.log('resetting', length, items.length, 0 < items.length);
     } else {
       length = items.length;
     }
+
     for (var i = 0; i < length; i++) {
-      console.log(restaurants[i].coordinates.latitude);
       marker = new google.maps.Marker({
         map: map,
         draggable: true,
@@ -201,10 +211,14 @@
   }
   /** FOR TESTING **/
   // setTimeout(getLocation, 1500);
-  $('#button-submit').on("click", getData);
-  $('#button-submit').trigger("click");
- 
   // $('#button-submit').on("click", getLocation);
+  // $('#button-submit').trigger("click");
+
+  $('#loader').hide();
+  $('#map').hide();
+  $('#listView').hide();
+ 
+  $('#button-submit').on("click", getLocation);
   //listeners
   $(document).on("click", '.restaurant-btn', loadSingleRestaurantView);
   $(document).on("click", '.close-btn', function () {
