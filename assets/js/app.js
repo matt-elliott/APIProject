@@ -18,13 +18,13 @@
   }
 
   function getLocation() {
-//     map = new google.maps.Map(document.getElementById('map'), {
-//       center: {
-//         lat: 34.0207305,
-//         lng: -118.6919308
-//       },
-//       zoom: 18
-//     });
+    map = new google.maps.Map(document.getElementById('map'), {
+      center: {
+        lat: 34.0207305,
+        lng: -118.6919308
+      },
+      zoom: 18
+    });
 
     if(navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(function(position) {
@@ -34,9 +34,9 @@
         loc = new google.maps.LatLng(lat, lng);
         getData();
         map.setCenter(loc);
-      }, function() {
-        console.log('success', lat,lng, loc);
-      }, {'maximum-age': 1});
+      }, function(error) {
+         console.log(error);
+      });
     } else {
       console.log('html5 geolocation failed')
       $('#listView').append('<div class="restaurant-view"><h2>We\'re Sorry, we were unable to find you.</h2></div>');
