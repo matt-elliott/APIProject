@@ -17,19 +17,6 @@
     $('#loader').hide();
   }
 
-  function findUserByIp() {
-    $.ajax({
-      url: 'http://ip-api.com/json'
-    }).then(function success(response) {
-      console.log(response.lat);
-      loc = new google.maps.LatLng(response.lat, response.lon);
-      getData();
-    },
-    function fail(data, status){
-      console.log(status);
-    });
-  }
-
   function getLocation() {
     map = new google.maps.Map(document.getElementById('map'), {
       center: {
@@ -50,7 +37,19 @@
         console.log(loc)
       }, function(error) {
         console.log(error);
-        findUserByIp();
+        
+        $.ajax({
+          url: 'https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyCrLNbCMxqut58h7AFwofVtZQP59iEbnwE',
+          method: 'POST'
+        }).then(function(response) {
+          lat = response.location.lat;
+          lng = response.location.lng;
+
+          loc = new google.maps.LatLng(lat, lng);
+          console.log(loc);
+          getData();
+          map.setCenter(loc);
+        })
 
       }, {timeout:5000, enableHighAccuracy: true});
     } else {
@@ -61,7 +60,8 @@
 
   function getData() {
     var query = $('#food-input').val();
-    
+    var latitude = loc.lat();
+    console.log(latitude);
     $('#loader').show();
     $('#map').hide();
     $('#listView').hide();
@@ -86,7 +86,7 @@
 
       // loc = new google.maps.LatLng(lat, lng);
       map = new google.maps.Map(document.getElementById('map'), {
-        center: loc, zoom: 14, radius: 500
+        center: loc, zoom: 13, radius: 1000
       });
 
       buildListView();
