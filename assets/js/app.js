@@ -17,13 +17,26 @@
     $('#loader').hide();
   }
 
+  function findUserByIp() {
+    $.ajax({
+      url: 'http://ip-api.com/json'
+    }).then(function success(response) {
+      console.log(response.lat);
+      loc = new google.maps.LatLng(response.lat, response.lon);
+      getData();
+    },
+    function fail(data, status){
+      console.log(status);
+    });
+  }
+
   function getLocation() {
     map = new google.maps.Map(document.getElementById('map'), {
       center: {
         lat: 34.0207305,
         lng: -118.6919308
       },
-      zoom: 18
+      zoom: 5
     });
 
     if(navigator.geolocation) {
@@ -34,18 +47,16 @@
         loc = new google.maps.LatLng(lat, lng);
         getData();
         map.setCenter(loc);
-      }, function() {
-        console.log('success', loc);
-      });
+        console.log(loc)
+      }, function(error) {
+        console.log(error);
+        findUserByIp();
+
+      }, {timeout:5000, enableHighAccuracy: true});
     } else {
       console.log('html5 geolocation failed')
       $('#listView').append('<div class="restaurant-view"><h2>We\'re Sorry, we were unable to find you.</h2></div>');
     }
-  }
-
-  function showPosition(position) {
-    console.log(position);
-    getData(position.coords.latitude, position.coords.longitude);
   }
 
   function getData() {
@@ -56,7 +67,7 @@
     $('#listView').hide();
     
     $.ajax({
-      url: `https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search?term=${query}&latitude=${lat}&longitude=${lng}&categories=restaurants&radius=400`,
+      url: `https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search?term=${query}&latitude=${loc.lat()}&longitude=${loc.lng()}&categories=restaurants`,
       headers: {
         Authorization: `Bearer ktigyrLk8IGtOoqqF4SB07jfVpMdNXYUuxDVfAKW_O5dAb4fa7megmQRsMeggxdnbc7Vma5Cx8qGcBLlZ0PFKLDKKz6xZX3GyZAijIWhmAn9tNeeHh3XAUYDQ_03WnYx`,
         'X-Requested-With' : XMLHttpRequest
@@ -75,7 +86,7 @@
 
       // loc = new google.maps.LatLng(lat, lng);
       map = new google.maps.Map(document.getElementById('map'), {
-        center: loc, zoom: 18
+        center: loc, zoom: 14, radius: 500
       });
 
       buildListView();
