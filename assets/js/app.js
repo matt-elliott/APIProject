@@ -1,6 +1,8 @@
 (function () {
   var restaurants = [];
   var loc;
+  var lat;
+  var lng;
   var map;
   var service;
 
@@ -16,24 +18,39 @@
   }
 
   function getLocation() {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(showPosition);
+    map = new google.maps.Map(document.getElementById('map'), {
+      center: {
+        lat: 34.0207305,
+        lng: -118.6919308
+      },
+      zoom: 18
+    });
+
+    if(navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        lat = position.coords.latitude;
+        lng = position.coords.longitude;
+
+        loc = new google.maps.LatLng(lat, lng);
+        getData();
+        map.setCenter(loc);
+      }, function() {
+        console.log('success', loc);
+      });
     } else {
-      var warningView = $('body').attr('<aside>');
-      warningView.attr('class', 'bg-warning text-dark');
-      warningView.html('<h2>Nothing Found!</h2>');
+      console.log('html5 geolocation failed')
+      $('#listView').append('<div class="restaurant-view"><h2>We\'re Sorry, we were unable to find you.</h2></div>');
     }
   }
 
   function showPosition(position) {
+    console.log(position);
     getData(position.coords.latitude, position.coords.longitude);
   }
 
-  function getData(lat, lng) {
-    var lat = 34.0594726;
-    var lng = -118.4460542;
+  function getData() {
     var query = $('#food-input').val();
-  
+    
     $('#loader').show();
     $('#map').hide();
     $('#listView').hide();
@@ -56,7 +73,7 @@
         return;
       }
 
-      loc = new google.maps.LatLng(lat, lng);
+      // loc = new google.maps.LatLng(lat, lng);
       map = new google.maps.Map(document.getElementById('map'), {
         center: loc, zoom: 18
       });
@@ -194,7 +211,7 @@
   }
   /** FOR TESTING **/
   // setTimeout(getLocation, 1500);
-  $('#button-submit').on("click", getData);
+  $('#button-submit').on("click", getLocation);
   $('#button-submit').trigger("click");
  
   // $('#button-submit').on("click", getLocation);
