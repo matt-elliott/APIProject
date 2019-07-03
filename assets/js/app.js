@@ -36,7 +36,7 @@
         map.setCenter(loc);
       }, function() {
         console.log('success', lat,lng, loc);
-      }, {maximum-age: 1});
+      }, {'maximum-age': 1});
     } else {
       console.log('html5 geolocation failed')
       $('#listView').append('<div class="restaurant-view"><h2>We\'re Sorry, we were unable to find you.</h2></div>');
