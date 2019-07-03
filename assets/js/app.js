@@ -6,10 +6,6 @@
   var map;
   var service;
 
-  $('#loader').show();
-  $('#map').hide();
-  $('#listView').hide();
-
   function noResults() {
     $('#listView').html(`<div class="error col-12"><h2>Nothing found, please try again</h2>`);
     $('#map').hide();
@@ -18,6 +14,7 @@
   }
 
   function getLocation() {
+    event.preventDefault();
     map = new google.maps.Map(document.getElementById('map'), {
       center: {
         lat: 34.0207305,
@@ -214,10 +211,14 @@
   }
   /** FOR TESTING **/
   // setTimeout(getLocation, 1500);
-  $('#button-submit').on("click", getLocation);
-  $('#button-submit').trigger("click");
- 
   // $('#button-submit').on("click", getLocation);
+  // $('#button-submit').trigger("click");
+
+  $('#loader').hide();
+  $('#map').hide();
+  $('#listView').hide();
+ 
+  $('#button-submit').on("click", getLocation);
   //listeners
   $(document).on("click", '.restaurant-btn', loadSingleRestaurantView);
   $(document).on("click", '.close-btn', function () {
