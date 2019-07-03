@@ -18,13 +18,13 @@
   }
 
   function getLocation() {
-    map = new google.maps.Map(document.getElementById('map'), {
-      center: {
-        lat: 34.0207305,
-        lng: -118.6919308
-      },
-      zoom: 18
-    });
+//     map = new google.maps.Map(document.getElementById('map'), {
+//       center: {
+//         lat: 34.0207305,
+//         lng: -118.6919308
+//       },
+//       zoom: 18
+//     });
 
     if(navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(function(position) {
