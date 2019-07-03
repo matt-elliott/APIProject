@@ -58,7 +58,7 @@
 
       loc = new google.maps.LatLng(lat, lng);
       map = new google.maps.Map(document.getElementById('map'), {
-        center: loc, zoom: 15
+        center: loc, zoom: 18
       });
 
       buildListView();
