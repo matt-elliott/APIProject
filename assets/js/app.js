@@ -1,4 +1,4 @@
-(function () {
+//(function () {
   var restaurants = [];
   var loc;
   var lat;
@@ -24,7 +24,7 @@
         lng: -118.6919308
       },
       zoom: 18
-    });
+    })
 
     if(navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(function(position) {
@@ -224,4 +224,4 @@
       parent.remove();
     }, 500);
   });
-})();
+//})();
