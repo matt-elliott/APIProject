@@ -34,10 +34,7 @@
         loc = new google.maps.LatLng(lat, lng);
         getData();
         map.setCenter(loc);
-        console.log(loc)
       }, function(error) {
-        console.log(error);
-        
         $.ajax({
           url: 'https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyCrLNbCMxqut58h7AFwofVtZQP59iEbnwE',
           method: 'POST'
@@ -46,14 +43,12 @@
           lng = response.location.lng;
 
           loc = new google.maps.LatLng(lat, lng);
-          console.log(loc);
           getData();
           map.setCenter(loc);
         })
 
       }, {timeout:5000, enableHighAccuracy: true});
     } else {
-      console.log('html5 geolocation failed')
       $('#listView').append('<div class="restaurant-view"><h2>We\'re Sorry, we were unable to find you.</h2></div>');
     }
   }
@@ -61,7 +56,7 @@
   function getData() {
     var query = $('#food-input').val();
     var latitude = loc.lat();
-    console.log(latitude);
+
     $('#loader').show();
     $('#map').hide();
     $('#listView').hide();
@@ -74,12 +69,9 @@
       },
       method: 'GET',
     }).then(function (response) {
-      console.log('got response!')
-
       restaurants = response.businesses;
-      console.log(restaurants.length);
+
       if (restaurants.length === 0) {
-        console.log('no results');
         noResults();
         return;
       }
