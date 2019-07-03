@@ -1,4 +1,4 @@
-//(function () {
+(function () {
   var restaurants = [];
   var loc;
   var lat;
@@ -235,4 +235,4 @@
       parent.remove();
     }, 500);
   });
-//})();
+})();
