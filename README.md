@@ -3,6 +3,12 @@
 ## A restaurant finding app
 https://matt-elliott.github.io/APIProject/
 
+## The Problem
+We have noticed it is hard for teams to pick their weekly lunch outings so we developed a simple web app to find restaurants near the user that match their search criterea.
+
+## The Build
+To solve this problem we used build our app with Node.js utilizing the Google Maps API and Yelp's APIs to search and return nearby restaurants that can match the users search.
+
 ## Directions
 Go to site, enter the type of food you would like (ie: Mexican Food) and click submit.
 The site will ask to allow it to get your location: click yes. Then you will see a map
