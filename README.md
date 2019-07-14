@@ -1,6 +1,12 @@
 # What Should I Eat for Lunch Today?
 
 ## A restaurant finding app
+https://matt-elliott.github.io/APIProject/
+
+## Directions
+Go to site, enter the type of food you would like (ie: Mexican Food) and click submit.
+The site will ask to allow it to get your location: click yes. Then you will see a map
+and local eateries that fit your criterea.
 
 ### Algorithm
 1. get user location
